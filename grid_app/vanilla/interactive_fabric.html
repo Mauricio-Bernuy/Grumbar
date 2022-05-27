@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Map </title>
+	<script src = "../node_modules/fabric/dist/fabric.min.js"></script>
+  </head>
+  <body>
+	<canvas id="canvas" width="800" height="800"></canvas>
+	<script>
+	  let canvas;
+	  let boundBox
+	  let squeare;
+	  let linesXN = [];
+	  let linesYN = [];
+	  let linesX = [];
+	  let linesY = [];
+	  let grid;
+
+	  window.onload = function() {
+		canvas = new fabric.Canvas('canvas', {
+		  backgroundColor: 'grey',
+		});
+
+		boundBox = new fabric.Rect({
+				width: 500,
+				height: 500, 
+				fill: 'orange', 
+				stroke: '#EAEAEA',
+				hasBorders: false,
+				selectable: false,
+				hasControls: false,
+				lockMovementX: true,
+				lockMovementY: true
+		});
+
+		canvas.add(boundBox);
+		canvas.centerObject(boundBox);
+
+		square = new fabric.Rect({
+				top: boundBox.top,
+				left: boundBox.left,
+				width: boundBox.width/10,
+				height: boundBox.height/10,
+				fill: 'red'
+		});
+		canvas.add(square);
+
+
+		//this is for Y lines
+		for (let i=0; i < 10; i++) {
+		  let l = boundBox.left + ((boundBox.width / 10) * i);
+		  let t = boundBox.top;
+		  let b = boundBox.top + boundBox.height;
+
+		  linesY.push(new fabric.Line([l,t,l,b],{
+			stroke: '#EAEAEA',
+			hasBorders: false,
+			selectable: false,
+			hasControls: false,
+			lockMovementX: true,
+			lockMovementY: true
+		  }));
+
+		  linesXN.push(l);
+		}
+		
+		//this is for X lines
+		for (let i=0; i < 10; i++) {
+		  let t = boundBox.top + ((boundBox.height / 10) * i);
+		  let l = boundBox.left;
+		  let r = boundBox.left + boundBox.width;
+
+		  linesX.push(new fabric.Line([l,t,r,t],{
+			stroke: '#EAEAEA',
+			hasBorders: false,
+			selectable: false,
+			hasControls: false,
+			lockMovementX: true,
+			lockMovementY: true
+		  }))
+
+		  linesYN.push(t);
+		}
+
+		//add to canvas for y
+		linesY.forEach((line) => {
+		  canvas.add(line);
+		})
+		//add to canvas for x
+		linesX.forEach((line) => {
+		  canvas.add(line);
+		})
+
+		//events
+		canvas.on({
+		  'object:moving': (e) => {
+			  let top = closest(linesYN, e.target.top);
+			  let left = closest(linesXN, e.target.left);
+
+			  e.target.set({
+				top: top,
+				left: left
+			  });
+
+		  }
+		});
+		
+		canvas.on('mouse:up', function(element) {
+		  var pointer = canvas.getPointer(event.e);
+		  var posX = pointer.x;
+		  var posY = pointer.y;
+		  let top = closest(linesYN, posX);
+		  let left = closest(linesXN, posY);
+
+		  var tile = new fabric.Rect({
+				top: left,
+				left: top,
+				width: boundBox.width/10,
+				height: boundBox.height/10,
+				fill: 'blue',
+				selectable: false,
+				hasControls: false,
+				lockMovementX: true,
+				lockMovementY: true
+		});
+		  canvas.add(tile);
+		});
+		
+	  }
+	  
+	  function closest(arr, closestTo) {
+		let smallestD = Math.abs(closestTo - arr[0]);
+		let c = 0;
+
+		for(let i = 1; i < arr.length; i++){
+		  let closestD = Math.abs(closestTo - arr[i]);
+		  if (closestD < smallestD){
+			smallestD = closestD;
+			c = i;
+		  }
+		}
+		console.log("arr[c] = " + arr[c]);
+		return arr[c];
+	  }
+	</script>
+  </body>
