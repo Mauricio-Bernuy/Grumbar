@@ -2,9 +2,10 @@ import { fabric } from "fabric"
 
 export const initHotkeys = (canvas) => {
 
+
     canvas.on('mouse:down', function(opt) {
         var evt = opt.e;
-        if (evt.altKey === true) {
+        if (evt.button === 1 || evt.altKey === true) {
           this.isDragging = true;
           this.selection = false;
           this.lastPosX = evt.clientX;
