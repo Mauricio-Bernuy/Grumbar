@@ -18,7 +18,7 @@ export const FabricContextProvider = ({ children }) => {
             preserveObjectStacking: true,
             selection: true,
             defaultCursor: "default",
-            backgroundColor: "orange",
+            backgroundColor: "white",
             fireMiddleClick: true,
             fireRightClick: true,
         }
