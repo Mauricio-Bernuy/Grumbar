@@ -84,6 +84,25 @@ const FabricRoom = () => {
 						canvas.remove(puntitos[i])
 					}
 
+					for(let i = 1; i < coords.length; i++) {
+						console.log(i)
+						if(i != puntitos.length-2) {
+							var line = new fabric.Line([coords[i-1].x, coords[i-1].y, coords[i].x, coords[i].y], {
+								stroke: 'black',
+								strokeWidth: 3
+							});
+							canvas.add(line);
+						}
+						else {
+							var line = new fabric.Line([coords[i-1].x, coords[i-1].y, coords[0].x, coords[0].y], {
+								stroke: 'black',
+								strokeWidth: 3
+							});
+							canvas.add(line);
+						}
+
+					}
+
                     coords = [];
 					puntitos = [];
                 }
