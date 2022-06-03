@@ -4,6 +4,7 @@ import FabricImage           from "./objects/FabricImage"
 import FabricLine            from "./objects/FabricLine"
 import FabricTextBox         from "./objects/FabricTextBox"
 import FabricAsset           from "./objects/FabricAsset"
+import FabricRoom            from "./objects/FabricRoom"
 // import { removeObjects } from "../components/libs/utils"
 
 const FabricToolbar = props => {
@@ -25,6 +26,7 @@ const FabricToolbar = props => {
             <button onClick={removeObjects}>
                 Delete Selected
             </button>
+			<FabricRoom/>
         </>
     )
 }
