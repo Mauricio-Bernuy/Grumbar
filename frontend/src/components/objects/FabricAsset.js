@@ -21,10 +21,12 @@ const FabricAsset = () => {
         fabric.Image.fromURL(file, function(img) {
             img.scaleToWidth(100);
             img.snapAngle=15
-		  //img.top = (opt.e.clientY - fabric.util.invertTransform(canvas.viewportTransform)[5]) * canvas.getZoom();
-		  //img.left = (opt.e.clientX - fabric.util.invertTransform(canvas.viewportTransform)[4]) * canvas.getZoom();
-			img.top = opt.e.layerY;
-			img.left = opt.e.layerX;
+			let pointer = canvas.getPointer(opt.e);
+			img.top = pointer.y - img.getScaledHeight()/2;
+			img.left = pointer.x - img.getScaledWidth()/2;
+			console.log("pointer: ", pointer);
+		  //img.top = opt.e.layerY;
+		  //img.left = opt.e.layerX;
             canvas.add(img);
         });
 		let listener = canvas.__eventListeners['mouse:up'];
@@ -43,7 +45,7 @@ const FabricAsset = () => {
 	  addAsset(e);
 	  lock = true;
 	}else
-	  console.log("OH MY THIS LOCK BE LIKE: 🥵🍆💦");
+	  console.log("OH MY! THIS LOCK BE LIKE: 🥵🍆💦");
   };
 
     return (
