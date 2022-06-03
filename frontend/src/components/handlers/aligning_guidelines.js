@@ -15,8 +15,11 @@ export const initAligningGuidelines = (canvas) => {
         ctx.lineWidth = aligningLineWidth
         ctx.strokeStyle = aligningLineColor
         ctx.beginPath()
-        ctx.moveTo(((x1 + viewportTransform[4]) * zoom), ((y1 + viewportTransform[5]) * zoom))
-        ctx.lineTo(((x2 + viewportTransform[4]) * zoom), ((y2 + viewportTransform[5]) * zoom))
+        // var im = fabric.util.invertTransform(viewportTransform)[4]
+        // fabric.util.transformPoint(im,)
+        ctx.moveTo(((x1 - fabric.util.invertTransform(viewportTransform)[4]) * zoom), ((y1 - fabric.util.invertTransform(viewportTransform)[5]) * zoom))
+        ctx.lineTo(((x2 - fabric.util.invertTransform(viewportTransform)[4]) * zoom), ((y2 - fabric.util.invertTransform(viewportTransform)[5]) * zoom))
+        
         ctx.stroke()
         ctx.restore()
     }
@@ -56,6 +59,10 @@ export const initAligningGuidelines = (canvas) => {
     let verticalLines = [],
         horizontalLines = []
 
+    // canvas.on("mouse:wheel", function() {
+    //     viewportTransform = canvas.viewportTransform
+    //     zoom = canvas.getZoom()
+    // })
     canvas.on("mouse:down", function() {
         viewportTransform = canvas.viewportTransform
         zoom = canvas.getZoom()

@@ -23,6 +23,7 @@ const FabricAsset = () => {
         });
     };
 
+    
     return (
         <>
             <button onClick={addAsset}>Add Asset</button>
