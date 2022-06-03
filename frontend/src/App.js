@@ -1,9 +1,14 @@
-import React                     from 'react';
+import React, { useEffect }      from 'react';
 import FabricCanvas              from "./components/FabricCanvas"
 import FabricToolbar             from "./components/FabricToolbar"
 import { FabricContextProvider } from "./context/FabricContext"
 
 function App() {
+
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+      }, []);
+
     return (
     <div style={{"padding": "100px 50px", 'height':'100vh' }}>
       <FabricContextProvider>

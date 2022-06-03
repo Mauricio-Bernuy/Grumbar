@@ -21,10 +21,24 @@ export const FabricContextProvider = ({ children }) => {
             backgroundColor: "white",
             fireMiddleClick: true,
             fireRightClick: true,
+            imageSmoothingEnabled: false,
+            
         }
         let c = new fabric.Canvas(el, canvasOptions)
         initAligningGuidelines(c)
         initHotkeys(c)
+        
+        // fabric.devicePixelRatio = 1; // oversampling, higher values produce sharper output
+        
+        // // var c = canvas1.getElement(), 
+        // let w = c.width, h = c.height;
+        // console.log(w,h,fabric.devicePixelRatio)
+        // // Scale the canvas up by two for retina
+        // c.width = w*fabric.devicePixelRatio*4;
+        // c.height = h*fabric.devicePixelRatio*4;
+        
+        // // finally set the scale of the context
+        // c.getContext('2d').scale(fabric.devicePixelRatio, fabric.devicePixelRatio);
 
         let gridSizeX = 20;
         let gridSizeY = 10;

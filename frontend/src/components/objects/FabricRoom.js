@@ -4,6 +4,7 @@ import React, {
 import { fabric }        from "fabric"
 import { FabricContext }          from "../../context/FabricContext"
 import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
+import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
 
 
 // const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
@@ -11,65 +12,63 @@ import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
 const FabricRoom = () => {
     const { canvas } = useContext(FabricContext)
 
-    // const addTextBox = (e) => {
-    //     document.getElementById("fabric-asset-upload").click()
-    // }
-  let lock = false;
-  const addAsset = (e) => {
-	  canvas.on('mouse:up', function(opt) {
-		let x, y, x2, y2;
-		let pointer = canvas.getPointer(opt.e);
-		x = pointer.x;
-		y = pointer.y;
-		x2 = x + 200;
-		y2 = y + 300;
-		let line = new fabric.Line([x, y, x2, y2]);
-		line.stroke = '#FFFFF';
-		canvas.add(line);
+  
+  let coords = [];
 
-		let listener = canvas.__eventListeners['mouse:up'];
-		let curr = listener[listener.length - 1];
+  const addPolyLine = (e) => {
 
-		console.log("listen: ", listener);
-		console.log("curr: ", curr);
-		canvas.off('mouse:up', curr);
+	coords.push(coords[0]);
+	console.log(1, coords);
+	
+	
+	const file = testfloor;
+	let coordscopy = coords;
 
-		lock = false;
-      });
+	fabric.Image.fromURL(file, function(img) {
+		// this scaling reduces pattern resolution, do not use
+		// img.scaleToWidth(100); 
 
-  };
+		var patternSourceCanvas = new fabric.StaticCanvas();
 
-  const bellido = (e) => {
-	if (lock === false) {
-	  addAsset(e);
-	  lock = true;
-	}else
-	  console.log("OH MY! THIS LOCK BE LIKE: 🥵🍆💦");
-  };
+		patternSourceCanvas.add(img);
+		patternSourceCanvas.renderAll();
+		patternSourceCanvas.setDimensions({
+			width: img.getScaledWidth(),
+			height: img.getScaledHeight(),
+		  });
+		  
+		var pattern = new fabric.Pattern({
+			source: patternSourceCanvas.getElement(),
+			repeat: 'repeat'
+		}); 
 
+		// scale with pattern transform to avoid blurring
+		pattern.patternTransform = [0.185, 0, 0, 0.185, 0, 0];
+		
+		let polyline = new fabric.Polyline(coordscopy, {
+			cornerStyle: 'circle',
+			fill: pattern,
+			stroke: "black",		
+			dirty: false,
+			strokeWidth:10,
+			objectCaching: false // greatly increases render resolution
+		});
 
-  const addPath = (e) => {
-	let x, y, x2, y2;
-	let pointer = canvas.getPointer(opt.e);
-	x = pointer.x;
-	y = pointer.y;
-	x2 = x + 200;
-	y2 = y + 300;
-	let line = new fabric.Line([x, y, x2, y2]);
-	line.stroke = '#FFFFF';
-	canvas.add(line);
+		canvas.add(polyline); 
+	 });
 
-	let listener = canvas.__eventListeners['mouse:up'];
-	let curr = listener[listener.length - 1];
-
-	console.log("listen: ", listener);
-	console.log("curr: ", curr);
-	canvas.off('mouse:up', curr);
-
-	lock = false;
+	// mantain a constant wall width and tile scale 
+	canvas.on('object:scaling', function(e) {
+		if (e.target != null) {
+		  console.log(e.target);
+		  var obj = e.target;
+		  
+			  obj.fill.patternTransform = [0.185/obj.scaleX, 0, 0, 0.185/obj.scaleY, 0, 0];
+			  obj.strokeWidth = 10/obj.scaleX;
+		}
+	  });
 };
 
-  let coords = [];
 
   let lock1 = false;
   const getCoords = (e) => {
@@ -83,6 +82,7 @@ const FabricRoom = () => {
 			console.log("length more than zero");
 			if (coords[0].x -100 <= x && x <= coords[0].x +100){
 				if (coords[0].y -100 <= y && y <= coords[0].y +100){
+
 					console.log("poly closed");
 					let listener = canvas.__eventListeners['mouse:up'];
 					let curr = listener[listener.length - 1];
@@ -90,10 +90,9 @@ const FabricRoom = () => {
 					console.log("listen: ", listener);
 					console.log("curr: ", curr);
 					canvas.off('mouse:up', curr);
-
+					
 					lock1 = false;
-
-
+					addPolyLine();
 					
 					coords = [];
 				}
@@ -101,17 +100,11 @@ const FabricRoom = () => {
 		}
 
 		coords.push({x,y});
-		console.log(coords);
-		// x2 = x + 200;
-		// y2 = y + 300;
-		// let line = new fabric.Line([x, y, x2, y2]);
-		// line.stroke = '#FFFFF';
-		// canvas.add(line);
-
-		
+		console.log(coords);		
       });
-
   };
+
+  
 
   const bellido1 = (e) => {
 	if (lock1 === false) {

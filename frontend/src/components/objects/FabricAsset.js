@@ -4,6 +4,8 @@ import React, {
 import { fabric }        from "fabric"
 import { FabricContext }          from "../../context/FabricContext"
 import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
+import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
+
 
 
 // const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
@@ -25,8 +27,6 @@ const FabricAsset = () => {
 			img.top = pointer.y - img.getScaledHeight()/2;
 			img.left = pointer.x - img.getScaledWidth()/2;
 			console.log("pointer: ", pointer);
-		  //img.top = opt.e.layerY;
-		  //img.left = opt.e.layerX;
             canvas.add(img);
         });
 		let listener = canvas.__eventListeners['mouse:up'];
