@@ -15,25 +15,12 @@ const FabricAsset = () => {
     //     document.getElementById("fabric-asset-upload").click()
     // }
     const addAsset = (e) => {
-        // console.log(path.dirname(__filename));
-        // const file = e.target.files[0]
-        // const file ='file://'+__dirname+'maidenless.jpg';
         const file = testasset;
-        // let fileType = e.target.files[0].type;
-        // const reader = new FileReader();
-    
-        // reader.addEventListener("load", function () {
-            fabric.Image.fromURL(file, function(img) {
-                img.scaleToWidth(100);
-                canvas.add(img);
-            });
-
-        // }, false);
-
-        // if (file) {
-        //     reader.readAsDataURL(file)
-        //     document.getElementById("fabric-image-upload").value = null
-        // }
+        fabric.Image.fromURL(file, function(img) {
+            img.scaleToWidth(100);
+            img.snapAngle=15
+            canvas.add(img);
+        });
     };
 
     return (

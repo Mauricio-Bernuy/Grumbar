@@ -3,7 +3,7 @@ import { FabricContext }     from "./../context/FabricContext"
 import FabricImage           from "./objects/FabricImage"
 import FabricLine            from "./objects/FabricLine"
 import FabricTextBox         from "./objects/FabricTextBox"
-import FabricAsset from "./objects/FabricAsset"
+import FabricAsset           from "./objects/FabricAsset"
 // import { removeObjects } from "../components/libs/utils"
 
 const FabricToolbar = props => {
@@ -18,7 +18,7 @@ const FabricToolbar = props => {
     return (
         <>
             <FabricTextBox/>
-            <FabricLine/>
+            {/* <FabricLine/> */}
             <FabricImage/>
             <FabricAsset/>
             <br/><br/>

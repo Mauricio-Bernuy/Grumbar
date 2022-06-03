@@ -1,7 +1,7 @@
 import { fabric } from "fabric"
 
 export const initHotkeys = (canvas) => {
-
+    
     canvas.on('mouse:down', function(opt) {
         var evt = opt.e;
         if (evt.altKey === true) {

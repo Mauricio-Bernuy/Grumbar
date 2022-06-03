@@ -42,7 +42,7 @@ const FabricImage = () => {
 
     return (
         <>
-            <button onClick={addTextBox}>Add Image</button>
+            <button onClick={addTextBox}>Add Custom Asset</button>
             <input type="file" id="fabric-image-upload" accept="image/*" onChange={onImageUpload}
                    style={{ display: "none" }}/>
         </>

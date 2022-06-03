@@ -24,11 +24,14 @@ export const FabricContextProvider = ({ children }) => {
         }
         let c = new fabric.Canvas(el, canvasOptions)
         initAligningGuidelines(c)
-        initHotkeys(c) // x d ?
+        initHotkeys(c)
+
+        let gridSizeX = 20;
+        let gridSizeY = 10;
         
         let boundBox = new fabric.Rect({
-            width: 5000,
-            height: 5000, 
+            width: gridSizeX*100,
+            height: gridSizeY*100, 
             fill: 'gray', 
             stroke: '#EAEAEA',
             hasBorders: false,
@@ -40,14 +43,15 @@ export const FabricContextProvider = ({ children }) => {
 
         c.add(boundBox);
         c.centerObject(boundBox);
-        let square = new fabric.Rect({
-            top: boundBox.top,
-            left: boundBox.left,
-            width: boundBox.width/50,
-            height: boundBox.height/50,
-            fill: 'red'
-        });
-        c.add(square);
+        // let square = new fabric.Rect({
+        //     top: boundBox.top,
+        //     left: boundBox.left,
+        //     width: boundBox.width/gridSizeX,
+        //     height: boundBox.height/gridSizeY,
+        //     fill: 'red'
+        // });
+        // c.add(square);
+        // c.bringToFront(square)
 
         let linesXN = [];
         let linesYN = [];
@@ -55,8 +59,8 @@ export const FabricContextProvider = ({ children }) => {
         let linesY = [];
             
 		//this is for Y lines
-		for (let i=0; i < 50; i++) {
-            let l = boundBox.left + ((boundBox.width / 50) * i);
+		for (let i=0; i < gridSizeX; i++) {
+            let l = boundBox.left + ((boundBox.width / gridSizeX) * i);
             let t = boundBox.top;
             let b = boundBox.top + boundBox.height;
   
@@ -73,8 +77,8 @@ export const FabricContextProvider = ({ children }) => {
           }
           
           //this is for X lines
-          for (let i=0; i < 50; i++) {
-            let t = boundBox.top + ((boundBox.height / 50) * i);
+          for (let i=0; i < gridSizeY; i++) {
+            let t = boundBox.top + ((boundBox.height / gridSizeY) * i);
             let l = boundBox.left;
             let r = boundBox.left + boundBox.width;
   
@@ -99,10 +103,6 @@ export const FabricContextProvider = ({ children }) => {
             c.add(line);
           })
   
-        
-
-
-
         c.renderAll()
         setCanvas(c)
     }, [])
