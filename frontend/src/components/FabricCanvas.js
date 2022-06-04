@@ -75,15 +75,17 @@ const FabricCanvas = ({ jsonData = null, width = 816, height = 144 }) => {
 
     useEffect(() => {
         function handleKeyDown(e) {
-            console.log(e.target);
-            console.log(e.keyCode);
+            
             if (e.keyCode === 46) { // delete selected objects
-                
+                console.log(e.target);
+            console.log(e.keyCode);
                 removeObjects(canvas);
             }
             if (e.keyCode === 84) { 
-                setTilePaintMode(false);
-                console.log(tilePaintMode);
+                console.log(e.target);
+                console.log(e.keyCode);
+                // setTilePaintMode(false);
+                // console.log(tilePaintMode);
                 // canvas.__eventListeners["mouse:down"][2] = [];
                 // canvas.__eventListeners["mouse:down"] = [];
                 // paint tiles

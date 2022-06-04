@@ -1,8 +1,15 @@
 import React, {
-    useContext, 
+	useState,
+	useContext, 
+	useEffect,
 }                        from "react"
 import { fabric }        from "fabric"
 import { FabricContext }          from "../../context/FabricContext"
+import {
+    getActiveStyle,
+    setActiveProp,
+    setActiveStyle,
+}                        from "../libs/utils"
 import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
 import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
 
@@ -11,48 +18,107 @@ import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
 // const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
 
 const FabricAsset = () => {
-    const { canvas } = useContext(FabricContext)
+    const { canvas, activeObject} = useContext(FabricContext)
+	const [showTools, setShowTools] = useState(false)
+	const [options, setOptions] = useState({
+		selectable: true,
+		hasControls: true,
+		lockMovementX: false,
+		lockMovementY: false
+    })
 
-    // const addTextBox = (e) => {
-    //     document.getElementById("fabric-asset-upload").click()
-    // }
-  let lock = false;
-  const addAsset = (e) => {
-	  canvas.on('mouse:up', function(opt) {
-        const file = testasset;
-        fabric.Image.fromURL(file, function(img) {
-            img.scaleToWidth(100);
-            img.snapAngle=15
-			let pointer = canvas.getPointer(opt.e);
-			img.top = pointer.y - img.getScaledHeight()/2;
-			img.left = pointer.x - img.getScaledWidth()/2;
-			console.log("pointer: ", pointer);
-            canvas.add(img);
-        });
-		let listener = canvas.__eventListeners['mouse:up'];
-		let curr = listener[listener.length - 1];
+	useEffect(() => {
+        setShowTools(activeObject ? activeObject.get("type") === "image" : false)
+        if (activeObject) {
+            const activeOptions = {
+                strokeWidth: getActiveStyle("strokeWidth", activeObject),
+				selectable: getActiveStyle("selectable", activeObject),
+				hasControls: getActiveStyle("hasControls", activeObject),
+				lockMovementX: getActiveStyle("lockMovementX", activeObject),
+				lockMovementY: getActiveStyle("lockMovementY", activeObject)
+            }
+            setOptions({ ...options, ...activeOptions })
+        }
+    }, [activeObject])
+	
+	const bringFw = (e) => {
+        setOptions({
+            ...options,
+        })
+			
+		activeObject.bringForward();
+    }
 
-		console.log("listen: ", listener);
-		console.log("curr: ", curr);
-		canvas.off('mouse:up', curr);
+	const sendBw = (e) => {
+        setOptions({
+            ...options,
+        })
+			
+		activeObject.sendBackwards();
+    }
 
-		lock = false;
-	  })
-  };
+	const toggleLockMovement = (e) => {
+        setOptions({
+            ...options,
+        })
+        setActiveStyle("selectable", !getActiveStyle("selectable", activeObject), activeObject)
+		setActiveStyle("hasControls", !getActiveStyle("hasControls", activeObject), activeObject)
+		setActiveStyle("lockMovementX", !getActiveStyle("lockMovementX", activeObject), activeObject)
+		setActiveStyle("lockMovementY", !getActiveStyle("lockMovementY", activeObject), activeObject)
+    }
+    
+    let lock = false;
+    const addAsset = (e) => {
+        canvas.on('mouse:up', function(opt) {
+            const file = testasset;
+            fabric.Image.fromURL(file, function(img) {
+                img.scaleToWidth(100);
+                img.snapAngle=15
+                let pointer = canvas.getPointer(opt.e);
+                img.top = pointer.y - img.getScaledHeight()/2;
+                img.left = pointer.x - img.getScaledWidth()/2;
+                console.log("pointer: ", pointer);
+                canvas.add(img);
+            });
+            let listener = canvas.__eventListeners['mouse:up'];
+            let curr = listener[listener.length - 1];
 
-  const bellido = (e) => {
-	if (lock === false) {
-	  addAsset(e);
-	  lock = true;
-	}else
-	  console.log("OH MY! THIS LOCK BE LIKE: 🥵🍆💦");
-  };
+            console.log("listen: ", listener);
+            console.log("curr: ", curr);
+            canvas.off('mouse:up', curr);
+
+            lock = false;
+        })
+    };
+
+    const clickOnce = (e) => {
+        if (lock === false) {
+        addAsset(e);
+        lock = true;
+        }else
+        console.log("Button already pressed.");
+    };
 
     return (
         <>
-            <button onClick={bellido}>Add Asset</button>
-            {/* <input type="file" id="fabric-asset" accept="image/*" onChange={onImageUpload}
-                   style={{ display: "none" }}/> */}
+            <button onClick={clickOnce}>Add Asset</button>
+            {
+                showTools &&
+                <div>
+					<label htmlFor="LockMovement">Lock Movement:</label>
+                    <input type="checkbox"
+                           style={{ "width": "40px" }}
+                           className="toggle-switch-checkbox"
+                           name="strokeWidth"
+						   defaultChecked={!options.selectable}
+                           onChange={toggleLockMovement}
+                    />
+                    <hr/>
+                    <button onClick={bringFw}>Bring Forwards</button>
+					<button onClick={sendBw}>Send Backwards</button>
+                </div>
+            }
+			<hr/>
         </>
     )
 }
