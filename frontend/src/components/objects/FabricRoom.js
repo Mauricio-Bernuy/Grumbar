@@ -158,20 +158,7 @@ const FabricRoom = () => {
 			x = pointer.x;
 			y = pointer.y;
 
-			var object = new fabric.Circle({
-				radius: 5,
-				fill: 'blue',
-				left: pointer.x-5,
-				top: pointer.y-5,
-				selectable: false,
-				hasControls: false,
-				lockMovementX: true,
-				lockMovementY: true
-				
-			});
 
-			temppoints.push(object)
-			canvas.add(object); 
 
 			if(coords.length > 0) {
 				let temp = coords[coords.length - 1]
@@ -186,6 +173,21 @@ const FabricRoom = () => {
 				  temppoints.push(line)
 				  canvas.add(line);
 			}
+
+			var object = new fabric.Circle({
+				radius: 5,
+				fill: 'blue',
+				left: pointer.x-5,
+				top: pointer.y-5,
+				selectable: false,
+				hasControls: false,
+				lockMovementX: true,
+				lockMovementY: true
+				
+			});
+
+			temppoints.push(object)
+			canvas.add(object); 
 			
 			if(coords.length === 0) {
 				var objectPatrol = new fabric.Circle({
