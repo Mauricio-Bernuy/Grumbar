@@ -82,9 +82,11 @@ const FabricRoom = () => {
 
 	let coords = [];
 	let temppoints = []
+	let templines = []
 
 	const addPolyLine = (e) => {
 
+		coords.pop()
 		coords.push(coords[0]);
 		console.log(1, coords);
 		
@@ -170,6 +172,20 @@ const FabricRoom = () => {
 
 			temppoints.push(object)
 			canvas.add(object); 
+
+			if(coords.length > 0) {
+				let temp = coords[coords.length - 1]
+				var line = new fabric.Line([temp.x, temp.y, pointer.x, pointer.y], {
+					fill: 'red',
+					stroke: 'red',
+					strokeWidth: 5,
+					selectable: false,
+					evented: false,
+				  });
+				
+				  temppoints.push(line)
+				  canvas.add(line);
+			}
 			
 			if(coords.length === 0) {
 				var objectPatrol = new fabric.Circle({
@@ -190,8 +206,10 @@ const FabricRoom = () => {
 				canvas.add(objectPatrol);
 			}
 
+			coords.push({x,y});
+			console.log(coords);	
 
-			if (coords.length > 0 ){
+			if (coords.length > 1 ){
 				console.log("length more than zero");
 				if (coords[0].x -20 <= x && x <= coords[0].x +20){
 					if (coords[0].y -20 <= y && y <= coords[0].y +20){
@@ -202,6 +220,10 @@ const FabricRoom = () => {
 
 						for(let i = 0; i < temppoints.length; i++) {
 							canvas.remove(temppoints[i])
+						}
+
+						for(let i = 0; i < templines.length; i++) {
+							canvas.remove(templines[i])
 						}
 
 						console.log("listen: ", listener);
@@ -216,9 +238,6 @@ const FabricRoom = () => {
 					}
 				}
 			}
-
-			coords.push({x,y});
-			console.log(coords);		
 		});
 	};
 
