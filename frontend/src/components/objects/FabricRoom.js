@@ -82,10 +82,12 @@ const FabricRoom = () => {
 
 	let coords = [];
 	let temppoints = []
+	let templines = []
 
 	const addPolyLine = (e) => {
 		coords.pop()
 
+		coords.pop()
 		coords.push(coords[0]);
 		console.log(1, coords);
 		
@@ -157,6 +159,22 @@ const FabricRoom = () => {
 			x = pointer.x;
 			y = pointer.y;
 
+
+
+			if(coords.length > 0) {
+				let temp = coords[coords.length - 1]
+				var line = new fabric.Line([temp.x, temp.y, pointer.x, pointer.y], {
+					fill: 'red',
+					stroke: 'red',
+					strokeWidth: 5,
+					selectable: false,
+					evented: false,
+				  });
+				
+				  temppoints.push(line)
+				  canvas.add(line);
+			}
+
 			var object = new fabric.Circle({
 				radius: 5,
 				fill: 'blue',
@@ -206,6 +224,10 @@ const FabricRoom = () => {
 
 						for(let i = 0; i < temppoints.length; i++) {
 							canvas.remove(temppoints[i])
+						}
+
+						for(let i = 0; i < templines.length; i++) {
+							canvas.remove(templines[i])
 						}
 
 						console.log("listen: ", listener);
