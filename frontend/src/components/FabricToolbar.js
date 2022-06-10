@@ -5,7 +5,7 @@ import FabricLine            from "./objects/FabricLine"
 import FabricTextBox         from "./objects/FabricTextBox"
 import FabricAsset           from "./objects/FabricAsset"
 import FabricRoom            from "./objects/FabricRoom"
-// import { removeObjects } from "../components/libs/utils"
+import FabricExportLoad            from "./objects/FabricExportLoad"
 
 const FabricToolbar = props => {
     const { canvas } = useContext(FabricContext)
@@ -27,6 +27,8 @@ const FabricToolbar = props => {
                 Delete Selected
             </button>
 			<FabricRoom/>
+            <br></br>
+            <FabricExportLoad/>
         </>
     )
 }

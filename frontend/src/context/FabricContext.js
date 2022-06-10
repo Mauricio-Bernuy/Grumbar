@@ -28,18 +28,6 @@ export const FabricContextProvider = ({ children }) => {
         initAligningGuidelines(c)
         initHotkeys(c)
         
-        // fabric.devicePixelRatio = 1; // oversampling, higher values produce sharper output
-        
-        // // var c = canvas1.getElement(), 
-        // let w = c.width, h = c.height;
-        // console.log(w,h,fabric.devicePixelRatio)
-        // // Scale the canvas up by two for retina
-        // c.width = w*fabric.devicePixelRatio*4;
-        // c.height = h*fabric.devicePixelRatio*4;
-        
-        // // finally set the scale of the context
-        // c.getContext('2d').scale(fabric.devicePixelRatio, fabric.devicePixelRatio);
-
         let gridSizeX = 20;
         let gridSizeY = 10;
         
@@ -52,20 +40,22 @@ export const FabricContextProvider = ({ children }) => {
             selectable: false,
             hasControls: false,
             lockMovementX: true,
-            lockMovementY: true
+            lockMovementY: true,            
         });
+        
+        // add name id
+        boundBox.toObject = (function(toObject) {
+          return function() {
+            return fabric.util.object.extend(toObject.call(this), {
+              name: this.name
+            });
+          };
+        })(boundBox.toObject);
+
+        boundBox.name= "bound";
 
         c.add(boundBox);
         c.centerObject(boundBox);
-        // let square = new fabric.Rect({
-        //     top: boundBox.top,
-        //     left: boundBox.left,
-        //     width: boundBox.width/gridSizeX,
-        //     height: boundBox.height/gridSizeY,
-        //     fill: 'red'
-        // });
-        // c.add(square);
-        // c.bringToFront(square)
 
         let linesXN = [];
         let linesYN = [];
@@ -86,6 +76,18 @@ export const FabricContextProvider = ({ children }) => {
               lockMovementX: true,
               lockMovementY: true
             }));
+
+            // add name id
+            linesY[linesY.length-1].toObject = (function(toObject) {
+              return function() {
+                return fabric.util.object.extend(toObject.call(this), {
+                  name: this.name
+                });
+              };
+            })(linesY[linesY.length-1].toObject);
+
+            linesY[linesY.length-1].name= "grid";
+
   
             linesXN.push(l);
           }
@@ -104,6 +106,16 @@ export const FabricContextProvider = ({ children }) => {
               lockMovementX: true,
               lockMovementY: true
             }))
+
+            linesX[linesX.length-1].toObject = (function(toObject) {
+              return function() {
+                return fabric.util.object.extend(toObject.call(this), {
+                  name: this.name
+                });
+              };
+            })(linesX[linesX.length-1].toObject);
+
+            linesX[linesX.length-1].name= "grid";
   
             linesYN.push(t);
           }

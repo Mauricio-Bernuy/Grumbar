@@ -21,8 +21,8 @@ const FabricRoom = () => {
     const { canvas, activeObject} = useContext(FabricContext)
 	const [showTools, setShowTools] = useState(false)
 	const [options, setOptions] = useState({
-        strokeWidth: 1,
 		selectable: true,
+        strokeWidth: 1,
 		hasControls: true,
 		lockMovementX: false,
 		lockMovementY: false
@@ -84,6 +84,7 @@ const FabricRoom = () => {
 	let temppoints = []
 
 	const addPolyLine = (e) => {
+		coords.pop()
 
 		coords.push(coords[0]);
 		console.log(1, coords);
@@ -190,8 +191,11 @@ const FabricRoom = () => {
 				canvas.add(objectPatrol);
 			}
 
+			
+			coords.push({x,y});
+			console.log(coords);	
 
-			if (coords.length > 0 ){
+			if (coords.length > 1 ){
 				console.log("length more than zero");
 				if (coords[0].x -20 <= x && x <= coords[0].x +20){
 					if (coords[0].y -20 <= y && y <= coords[0].y +20){
@@ -217,8 +221,7 @@ const FabricRoom = () => {
 				}
 			}
 
-			coords.push({x,y});
-			console.log(coords);		
+				
 		});
 	};
 
