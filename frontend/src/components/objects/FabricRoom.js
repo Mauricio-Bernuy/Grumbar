@@ -81,19 +81,16 @@ const FabricRoom = () => {
 
 
 	let coords = [];
-	let temppoints = []
+	let tempoverlay = []
 	let templines = []
 
 	const addPolyLine = (e) => {
 		coords.pop()
-
-		coords.pop()
 		coords.push(coords[0]);
-		console.log(1, coords);
 		
-		
-		const file = testfloor;
-		let coordscopy = coords;
+		const file = testfloor; // Floor asset
+
+		let coordscopy = coords; // using var instead of let in coords may fix this (global ish values?)
 
 		fabric.Image.fromURL(file, function(img) {
 			// this scaling reduces pattern resolution, do not use
@@ -131,7 +128,10 @@ const FabricRoom = () => {
 			
 			polyline.bringForward();
 			
-			// canvas.setActiveObject(polyline);
+			// maybe use this to automatically select the created object 
+			//(buggy for now, maybe use instead the closest to mouse, make it a function lel)
+
+			// canvas.setActiveObject(polyline); 
 		});
 
 		
@@ -152,15 +152,15 @@ const FabricRoom = () => {
 
 
 	let lock1 = false;
+	var detectionRadius = 20 // px
 	const getCoords = (e) => {
 		canvas.on('mouse:up', function(opt) {
 			let x, y;
 			let pointer = canvas.getPointer(opt.e);
 			x = pointer.x;
 			y = pointer.y;
-
-
-
+			
+			// line drawing
 			if(coords.length > 0) {
 				let temp = coords[coords.length - 1]
 				var line = new fabric.Line([temp.x, temp.y, pointer.x, pointer.y], {
@@ -171,10 +171,11 @@ const FabricRoom = () => {
 					evented: false,
 				  });
 				
-				  temppoints.push(line)
+				  tempoverlay.push(line)
 				  canvas.add(line);
 			}
 
+			// point drawing
 			var object = new fabric.Circle({
 				radius: 5,
 				fill: 'blue',
@@ -187,14 +188,15 @@ const FabricRoom = () => {
 				
 			});
 
-			temppoints.push(object)
+			tempoverlay.push(object)
 			canvas.add(object); 
 			
+			// initial circle 
 			if(coords.length === 0) {
 				var objectPatrol = new fabric.Circle({
-					radius: 20,
-					left: pointer.x-20,
-					top: pointer.y-20,
+					radius: detectionRadius,
+					left: pointer.x-detectionRadius,
+					top: pointer.y-detectionRadius,
 					fill: 'rgba(0,0,0,0)',
 					hasBorder: true,
 					stroke: 'black',
@@ -205,25 +207,25 @@ const FabricRoom = () => {
 					ockMovementY: true
 				});
 
-				temppoints.push(objectPatrol)
+				tempoverlay.push(objectPatrol)
 				canvas.add(objectPatrol);
-			}
-
-			
+			}			
 			coords.push({x,y});
-			console.log(coords);	
+
+
+			// check if near enough to close the circle
 
 			if (coords.length > 1 ){
 				console.log("length more than zero");
-				if (coords[0].x -20 <= x && x <= coords[0].x +20){
-					if (coords[0].y -20 <= y && y <= coords[0].y +20){
+				if (coords[0].x -detectionRadius <= x && x <= coords[0].x +detectionRadius){
+					if (coords[0].y -detectionRadius <= y && y <= coords[0].y +detectionRadius){
 
 						console.log("poly closed");
 						let listener = canvas.__eventListeners['mouse:up'];
 						let curr = listener[listener.length - 1];
 
-						for(let i = 0; i < temppoints.length; i++) {
-							canvas.remove(temppoints[i])
+						for(let i = 0; i < tempoverlay.length; i++) {
+							canvas.remove(tempoverlay[i])
 						}
 
 						for(let i = 0; i < templines.length; i++) {
@@ -238,7 +240,7 @@ const FabricRoom = () => {
 						addPolyLine();
 						
 						coords = [];
-						temppoints = [];
+						tempoverlay = [];
 					}
 				}
 			}
