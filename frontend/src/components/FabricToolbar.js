@@ -27,7 +27,6 @@ const FabricToolbar = props => {
             </button>
             <hr/>
 			<FabricRoom/>
-            <br></br>
             <FabricExportLoad/>
         </>
     )

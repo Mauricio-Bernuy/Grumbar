@@ -286,7 +286,6 @@ const FabricRoom = () => {
 
                 </div>
             }
-			<hr/>
         </>
     )
 }
