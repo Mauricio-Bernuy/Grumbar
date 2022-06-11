@@ -22,10 +22,10 @@ const FabricToolbar = props => {
             {/* <FabricLine/> */}
             <FabricImage/>
             <FabricAsset/>
-            <br/><br/>
             <button onClick={removeObjects}>
                 Delete Selected
             </button>
+            <hr/>
 			<FabricRoom/>
         </>
     )
