@@ -53,7 +53,6 @@ const FabricCanvas = ({ jsonData = null }) => {
     }, [canvas, updateActiveObject])
 
     // move these to somewhere else and call them from the hotkey listener and other places 
-
     const removeObjects = (canvas) => {
         canvas.getActiveObjects().forEach((obj) => {
             canvas.remove(obj)
@@ -84,42 +83,29 @@ const FabricCanvas = ({ jsonData = null }) => {
         };
     }, [canvas]);
    
-    // useEffect(() => {
-        
-    //     if (canvas){
-    //         window.addEventListener("resize",canvas.setWidth(window.innerHeight));
-    //         return () => window.removeEventListener("resize", canvas.setWidth(window.innerHeight));
-    //     }
-    //         // canvas.setWidth(window.innerHeight);
-    //         // canvas.setHeight(window.innerWidth);
-    //         // canvas.renderAll()
-    //         // canvas.setDimensions({width: window.innerHeight, height: window.innerWidth}, {cssOnly: true})
-    //     })
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+    // handle dynamic window resize
     let resizeWindow = () => {
-        setWindowWidth(window.innerWidth);
-        setWindowHeight(window.innerHeight);
+        if (canvas){
+            console.log("current window dimensions:",window.innerWidth,window.innerHeight)
+            canvas.setHeight(window.innerHeight);
+            canvas.setWidth(window.innerWidth);
+            canvas.renderAll();
+        }
     };
-
     useEffect(() => {
         resizeWindow();
         window.addEventListener("resize", resizeWindow);
         return () => window.removeEventListener("resize", resizeWindow);
-    }, []);
+    }, [canvas]);
 
     
     return (
         <div>
             <canvas ref={canvasEl}
                     id="fabric-canvas"
-                    height={2000}
-                    width={2000}
-                    // width={windowWidth}
-                    // height={windowHeight}
-                    // width={width*window.devicePixelRatio}
-                    // height={height*window.devicePixelRatio}
+                    height={window.innerHeight}
+                    width={window.innerWidth}
                     style={{ border: "1px solid black", width: "100%", height: "100%" }}
                     />
         </div>
