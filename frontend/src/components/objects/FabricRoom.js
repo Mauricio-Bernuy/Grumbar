@@ -273,11 +273,11 @@ const FabricRoom = () => {
                            onChange={updateStrokeWidth}
                     />
 					<hr/>
-					<label htmlFor="LockMovement">Lock Movement:</label>
+					<label htmlFor="lockMovement">Lock Movement:</label>
                     <input type="checkbox"
                            style={{ "width": "40px" }}
                            className="toggle-switch-checkbox"
-                           name="strokeWidth"
+                           name="lockMovement"
 						   defaultChecked={!options.selectable}
                            onChange={toggleLockMovement}
                     />

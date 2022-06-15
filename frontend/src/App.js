@@ -8,6 +8,7 @@ import {DropdownMenu} from "./components/DropdownMenu"
 import { LoginButton } from "./components/Login"
 import {ReactComponent as ProfileIcon} from "./profileicon.svg"
 import {useAuth0} from "@auth0/auth0-react"
+import {FpsView} from "react-fps";
 
 function App() {
   const {user,isAuthenticated} = useAuth0()
@@ -19,29 +20,32 @@ function App() {
     return (
       <>
         <div style={{"padding": "10px 10px", 'height':'100vh' }}>
-          {isAuthenticated ? (
+          {/* {isAuthenticated ? ( */}
             <> 
-              <NavBar>
+              {/* <NavBar>
                 <NavItem icon={<ProfileIcon/>}>
                   <DropdownMenu/>
                 </NavItem>
-              </NavBar>
+              </NavBar> */}
               <FabricContextProvider>
                 <div style={{ "display": "flex", "alignItems": "stretch" }}>
                     <div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
                       <FabricToolbar/>
+                      
+                      <FpsView width={100} height={20} top={window.innerHeight-50} left={0}/>
                     </div>
                     <div style={{ "flex": "1" }}>
                       <FabricCanvas/>
                     </div>
                 </div>
               </FabricContextProvider>
+              
             </>
-          ):(
+          {/* ):(
             <>
               <LoginButton />
             </>
-          )}
+          )} */}
         </div>
       </>
     );
