@@ -24,8 +24,6 @@ export const FabricContextProvider = ({ children }) => {
             fireMiddleClick: true,
             fireRightClick: true,
             imageSmoothingEnabled: false,
-            // width:xd.width,
-            // height:xd.height
         }
         let c = new fabric.Canvas(el, canvasOptions)
 

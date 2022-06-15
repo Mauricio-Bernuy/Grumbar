@@ -18,6 +18,7 @@ const FabricGrid = () => {
 		gridSizeX: 20,
         gridSizeY: 10,
     })
+
     const [prevGrid, setPrevGrid] = useState([])
 
     const updateGridSize = (e) => {
@@ -30,7 +31,6 @@ const FabricGrid = () => {
     }
 
     useEffect(() => {
-        // TODO call once after canvas is initialized
         if (canvas){
             let gridStore = [];
             let objects = canvas.getObjects();
@@ -57,7 +57,8 @@ const FabricGrid = () => {
                 selectable: false,
                 hasControls: false,
                 lockMovementX: true,
-                lockMovementY: true,            
+                lockMovementY: true,    
+                objectCaching: false // MUCH FASTER        
             });
             
             // add name id
@@ -77,79 +78,62 @@ const FabricGrid = () => {
 			
             gridStore.push(boundBox);
 
-
-            let linesX = [];
-            let linesY = [];
-            
+            let lineopts = {
+                stroke: '#EAEAEA',
+                hasBorders: false,
+                selectable: false,
+                hasControls: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                objectCaching: false // MUCH FASTER RENDERING
+            }
             //this is for Y lines
             for (let i=0; i <= gridSizeX; i++) {
                 let l = boundBox.left + ((boundBox.width / gridSizeX) * i);
                 let t = boundBox.top;
                 let b = boundBox.top + boundBox.height;
     
-                linesY.push(new fabric.Line([l,t,l,b],{
-                stroke: '#EAEAEA',
-                hasBorders: false,
-                selectable: false,
-                hasControls: false,
-                lockMovementX: true,
-                lockMovementY: true
-                }));
+                let line = (new fabric.Line([l,t,l,b],lineopts));
     
                 // add name id
-                linesY[linesY.length-1].toObject = (function(toObject) {
-                return function() {
-                    return fabric.util.object.extend(toObject.call(this), {
-                    name: this.name
-                    });
-                };
-                })(linesY[linesY.length-1].toObject);
-    
-                linesY[linesY.length-1].name= "grid";
+                line.toObject = (function(toObject) {
+                    return function() {
+                        return fabric.util.object.extend(toObject.call(this), {
+                        name: this.name
+                        });
+                    };
+                })
+                line.name= "grid";
+
+                canvas.add(line);
+                line.moveTo(linelayer)
+                gridStore.push(line);
             }
             
             //this is for X lines
             for (let i=0; i <= gridSizeY; i++) {
-            let t = boundBox.top + ((boundBox.height / gridSizeY) * i);
-            let l = boundBox.left;
-            let r = boundBox.left + boundBox.width;
-    
-            linesX.push(new fabric.Line([l,t,r,t],{
-                stroke: '#EAEAEA',
-                hasBorders: false,
-                selectable: false,
-                hasControls: false,
-                lockMovementX: true,
-                lockMovementY: true
-            }))
-    
-            linesX[linesX.length-1].toObject = (function(toObject) {
-                return function() {
-                return fabric.util.object.extend(toObject.call(this), {
-                    name: this.name
-                });
-                };
-            })(linesX[linesX.length-1].toObject);
-    
-            linesX[linesX.length-1].name= "grid";
-            }
-    
-            //add to canvas for y
-            linesY.forEach((line) => {
-                canvas.add(line);
-                line.moveTo(linelayer)
-            gridStore.push(line);
-            })
-            //add to canvas for x
-            linesX.forEach((line) => {
-                canvas.add(line);
-                line.moveTo(linelayer)
-            gridStore.push(line);
-            })
+                let t = boundBox.top + ((boundBox.height / gridSizeY) * i);
+                let l = boundBox.left;
+                let r = boundBox.left + boundBox.width;
         
+                let line = (new fabric.Line([l,t,r,t],lineopts))
+        
+                line.toObject = (function(toObject) {
+                    return function() {
+                        return fabric.util.object.extend(toObject.call(this), {
+                            name: this.name
+                        });
+                    };
+                })
+                // line.toObject;
+                line.name= "grid";
+                canvas.add(line);
+                line.moveTo(linelayer)
+                gridStore.push(line);
+            }        
             setPrevGrid(gridStore)
         }
-    }, [options]);
+    }, [options, canvas]);
 
     return (
         <>
