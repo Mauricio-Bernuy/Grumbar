@@ -11,11 +11,6 @@ import {
     setActiveStyle,
 }                        from "../libs/utils"
 import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
-import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
-
-
-
-// const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
 
 const FabricAsset = () => {
     const { canvas, activeObject} = useContext(FabricContext)

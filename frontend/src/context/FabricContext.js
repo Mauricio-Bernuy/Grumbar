@@ -30,6 +30,7 @@ export const FabricContextProvider = ({ children }) => {
         initAligningGuidelines(c)
         initHotkeys(c)
         c.renderAll()
+        fabric.devicePixelRatio = 2; // oversampling, higher values produce sharper output, decreases performance
         setCanvas(c)
     }, [])
     
