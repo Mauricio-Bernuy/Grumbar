@@ -20,13 +20,13 @@ function App() {
     return (
       <>
         <div style={{"padding": "10px 10px", 'height':'100vh' }}>
-          {/* {isAuthenticated ? ( */}
+          {isAuthenticated ? (
             <> 
-              {/* <NavBar>
+              <NavBar>
                 <NavItem icon={<ProfileIcon/>}>
                   <DropdownMenu/>
                 </NavItem>
-              </NavBar> */}
+              </NavBar>
               <FabricContextProvider>
                 <div style={{ "display": "flex", "alignItems": "stretch" }}>
                     <div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
@@ -41,11 +41,13 @@ function App() {
               </FabricContextProvider>
               
             </>
-          {/* ):(
+          )
+          :
+          (
             <>
               <LoginButton />
             </>
-          )} */}
+          )}
         </div>
       </>
     );

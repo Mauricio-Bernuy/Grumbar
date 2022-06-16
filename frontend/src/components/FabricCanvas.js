@@ -8,15 +8,12 @@ import React, {
 }                        from "react"
 import { FabricContext } from "../context/FabricContext"
 
-// const FabricCanvas = ({ jsonData = null, width = 810, height = 140 }) => {
-const FabricCanvas = ({ jsonData = null }) => {
-
-    // const [windowSize, setWindowSize] = useState([816,144])
-    const [width, setWidth] = useState(0);
-    const [height, setHeight] = useState(0);
+const FabricCanvas = ({ jsonData = null}) => {
     
     const canvasEl = useRef(null)
     const { canvas, initCanvas, setActiveObject, loadFromJSON } = useContext(FabricContext)
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
     useLayoutEffect(() => {
         if (jsonData) {
@@ -83,29 +80,27 @@ const FabricCanvas = ({ jsonData = null }) => {
         };
     }, [canvas]);
    
-
-    // handle dynamic window resize
-    let resizeWindow = () => {
-        if (canvas){
-            console.log("current window dimensions:",window.innerWidth,window.innerHeight)
-            canvas.setHeight(window.innerHeight);
-            canvas.setWidth(window.innerWidth);
-            canvas.renderAll();
-        }
-    };
     useEffect(() => {
-        resizeWindow();
+        // handle dynamic window resize
+        let resizeWindow = () => {
+            if (canvas){
+                console.log("current window dimensions:",window.innerWidth,window.innerHeight)
+                canvas.setHeight(window.innerHeight);
+                canvas.setWidth(window.innerWidth);
+                console.log(canvas.getWidth(),canvas.getHeight())
+                canvas.renderAll();
+                canvas.calcOffset();
+            }
+        };
         window.addEventListener("resize", resizeWindow);
         return () => window.removeEventListener("resize", resizeWindow);
     }, [canvas]);
 
-    
+
     return (
         <div>
             <canvas ref={canvasEl}
                     id="fabric-canvas"
-                    height={window.innerHeight}
-                    width={window.innerWidth}
                     style={{ border: "1px solid black", width: "100%", height: "100%" }}
                     />
         </div>
