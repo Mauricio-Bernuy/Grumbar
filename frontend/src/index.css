@@ -78,7 +78,8 @@ button{
 
 .dropdown {
   position:absolute;
-  top: 58px;
+  z-index: 1;
+  top: 48px;
   width: 300px;
   transform: translateX(-45%);
   background-color: var(--bg);
@@ -130,3 +131,8 @@ button{
   height: 100%;
   width: 100%;
 }
+
+/* .canvas {
+  background-color:#333;
+} */
+

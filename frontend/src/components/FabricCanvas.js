@@ -102,7 +102,7 @@ const FabricCanvas = ({ jsonData = null}) => {
                     id="fabric-canvas"
                     width={width}
                     height={height}
-                    style={{ border: "1px solid black", width: "100%", height: "100%" }}
+                    style={{ border: "0px solid black", width: "100%", height: "100%"}}
                     />
         </div>
     )

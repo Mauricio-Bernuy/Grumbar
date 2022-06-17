@@ -19,7 +19,7 @@ function App() {
 
     return (
       <>
-        <div style={{"padding": "10px 10px", 'height':'100vh' }}>
+        <div style={{"padding": "0px 0px", 'height':'100vh' }}>
           {isAuthenticated ? (
             <> 
               <NavBar>

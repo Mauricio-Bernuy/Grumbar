@@ -20,13 +20,13 @@ export const FabricContextProvider = ({ children }) => {
             preserveObjectStacking: true,
             selection: true,
             defaultCursor: "default",
-            backgroundColor: "white",
+            backgroundColor: "#8083c9",
             fireMiddleClick: true,
             fireRightClick: true,
             imageSmoothingEnabled: false,
         }
         let c = new fabric.Canvas(el, canvasOptions)
-
+        
         initAligningGuidelines(c)
         initHotkeys(c)
         c.renderAll()
