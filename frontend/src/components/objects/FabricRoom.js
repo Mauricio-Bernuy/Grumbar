@@ -21,11 +21,13 @@ const FabricRoom = () => {
     const { canvas, activeObject} = useContext(FabricContext)
 	const [showTools, setShowTools] = useState(false)
 	const [options, setOptions] = useState({
-		selectable: true,
+		selectable: false,
         strokeWidth: 1,
-		hasControls: true,
-		lockMovementX: false,
-		lockMovementY: false
+		hasControls: false,
+		lockMovementX: true,
+		lockMovementY: true,
+		lockSkewingX: true,
+		lockSkewingY: true
     })
 
 	useEffect(() => {
@@ -91,7 +93,7 @@ const FabricRoom = () => {
 		const file = testfloor; // Floor asset
 
 		let coordscopy = coords; // using var instead of let in coords may fix this (global ish values?)
-
+		let polyline = null;
 		fabric.Image.fromURL(file, function(img) {
 			// this scaling reduces pattern resolution, do not use
 			// img.scaleToWidth(100); 
@@ -113,7 +115,8 @@ const FabricRoom = () => {
 			// scale with pattern transform to avoid blurring
 			pattern.patternTransform = [0.185, 0, 0, 0.185, 0, 0];
 			
-			let polyline = new fabric.Polyline(coordscopy, {
+			polyline = new fabric.Polyline(coordscopy, {
+				...options,
 				cornerStyle: 'circle',
 				fill: pattern,
 				stroke: "black",		
@@ -128,22 +131,34 @@ const FabricRoom = () => {
 			
 			polyline.bringForward();
 			
-			// maybe use this to automatically select the created object 
-			//(buggy for now, maybe use instead the closest to mouse, make it a function lel)
-
-			// canvas.setActiveObject(polyline); 
 		});
 
-		
 		canvas.renderAll();
+
 
 		// mantain a constant wall width and tile scale 
 		canvas.on('object:scaling', function(e) {
 			if (e.target != null) {
-				console.log(e.target);
-				var obj = e.target;
-				obj.fill.patternTransform = [0.185/obj.scaleX, 0, 0, 0.185/obj.scaleY, 0, 0];
-				obj.strokeWidth = (10/obj.scaleX);
+				// handle just object
+				if (e.target.type === 'polyline'){
+					var obj = e.target;
+					obj.fill.patternTransform = [0.185/obj.scaleX, 0, 0, 0.185/obj.scaleY, 0, 0];
+					obj.strokeWidth = (10/obj.scaleX);
+					// console.log(obj.scaleX,obj.scaleY,"applied!")
+				}
+				// handle in group
+				else if(e.target._objects){
+					e.target._objects.forEach(element => {
+						if (element.type === 'polyline'){
+							var obj = element;
+							var relativeX = element.scaleX*e.target.scaleX;
+							var relativeY = element.scaleY*e.target.scaleY;
+							obj.fill.patternTransform = [0.185/relativeX, 0, 0, 0.185/relativeY, 0, 0];
+							obj.strokeWidth = (10/relativeX);
+							// console.log(relativeX,relativeY,"applied!")
+						}
+					});
+				}
 			}
 		});
 
@@ -212,7 +227,6 @@ const FabricRoom = () => {
 			}			
 			coords.push({x,y});
 
-
 			// check if near enough to close the circle
 
 			if (coords.length > 1 ){
@@ -232,20 +246,19 @@ const FabricRoom = () => {
 							canvas.remove(templines[i])
 						}
 
-						console.log("listen: ", listener);
-						console.log("curr: ", curr);
+						// console.log("listen: ", listener);
+						// console.log("curr: ", curr);
 						canvas.off('mouse:up', curr);
 						
 						lock1 = false;
 						addPolyLine();
-						
+
 						coords = [];
 						tempoverlay = [];
 					}
 				}
 			}
-
-				
+							
 		});
 	};
 

@@ -125,7 +125,6 @@ const FabricGrid = () => {
                         });
                     };
                 })
-                // line.toObject;
                 line.name= "grid";
                 canvas.add(line);
                 line.moveTo(linelayer)

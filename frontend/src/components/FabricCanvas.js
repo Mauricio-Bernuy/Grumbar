@@ -9,11 +9,12 @@ import React, {
 import { FabricContext } from "../context/FabricContext"
 
 const FabricCanvas = ({ jsonData = null}) => {
+
+    const [width, setWidth] = useState(window.innerWidth);
+    const [height, setHeight] = useState(window.innerHeight);
     
     const canvasEl = useRef(null)
     const { canvas, initCanvas, setActiveObject, loadFromJSON } = useContext(FabricContext)
-    let width = window.innerWidth;
-    let height = window.innerHeight;
 
     useLayoutEffect(() => {
         if (jsonData) {
@@ -64,7 +65,7 @@ const FabricCanvas = ({ jsonData = null}) => {
             
             if (e.keyCode === 46) { // delete selected objects
                 console.log(e.target);
-            console.log(e.keyCode);
+                console.log(e.keyCode);
                 removeObjects(canvas);
             }
             if (e.keyCode === 84) { 
@@ -84,10 +85,8 @@ const FabricCanvas = ({ jsonData = null}) => {
         // handle dynamic window resize
         let resizeWindow = () => {
             if (canvas){
-                console.log("current window dimensions:",window.innerWidth,window.innerHeight)
                 canvas.setHeight(window.innerHeight);
                 canvas.setWidth(window.innerWidth);
-                console.log(canvas.getWidth(),canvas.getHeight())
                 canvas.renderAll();
                 canvas.calcOffset();
             }
@@ -101,6 +100,8 @@ const FabricCanvas = ({ jsonData = null}) => {
         <div>
             <canvas ref={canvasEl}
                     id="fabric-canvas"
+                    width={width}
+                    height={height}
                     style={{ border: "1px solid black", width: "100%", height: "100%" }}
                     />
         </div>
