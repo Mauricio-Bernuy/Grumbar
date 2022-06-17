@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   frontend:
+    restart: always
     build: 
       context: ./frontend
       dockerfile: Dockerfile
@@ -9,15 +10,15 @@ services:
     networks:
       - app-network
     volumes:
-      - ./frontend:/frontend/src/app
+      - ./frontend:/frontend
     depends_on:
       - backend
-    working_dir: /frontend/src/app
-    command: npm start
+    working_dir: /frontend
     stdin_open: true
     tty: true
   
   backend:
+    restart: always
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -27,10 +28,8 @@ services:
       - app-network
     volumes:
       - ./backend:/backend
-      - /backend/node_modules
     depends_on:
       - mongodb
-    command: /usr/app/node_modules/.bin/nodemon -L src/index.js
 
   mongodb:
     image: mongo

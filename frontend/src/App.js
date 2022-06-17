@@ -1,4 +1,4 @@
-import React, { useEffect }      from 'react';
+import React, { useEffect, Component }  from 'react';
 import FabricCanvas              from "./components/FabricCanvas"
 import FabricToolbar             from "./components/FabricToolbar"
 import { FabricContextProvider } from "./context/FabricContext"
@@ -9,48 +9,96 @@ import { LoginButton } from "./components/Login"
 import {ReactComponent as ProfileIcon} from "./profileicon.svg"
 import {useAuth0} from "@auth0/auth0-react"
 import {FpsView} from "react-fps";
+import "./App.css";
 
+
+class App extends Component {
+  constructor(props) {
+	super(props);
+	this.state = { apiResponse: "" };
+  }
+
+  callAPI() {
+	fetch("http://localhost:9000/testAPI")
+	  .then(res => res.text())
+	  .then(res => this.setState({ apiResponse: res }));
+  }
+  callDB() {    
+	fetch("http://localhost:9000/testDB")
+	  .then(res => res.text())
+	  .then(res => this.setState({ dbResponse: res }))        
+	  .catch(err => err);
+  }
+
+  componentDidMount() {
+	this.callAPI();
+	this.callDB();
+  }
+
+  render() {
+	return (
+	  <div style={{"padding": "0px 0px", 'height':'100vh' }}>
+		<p>{this.state.apiResponse}</p>
+		<p>{this.state.dbResponse}</p>
+		<FabricContextProvider>
+		  <div style={{ "display": "flex", "alignItems": "stretch" }}>
+			<div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
+			  <FabricToolbar/>
+			  <FpsView width={100} height={20} top={window.innerHeight-50} left={0}/>
+			</div>
+			<div style={{ "flex": "1" }}>
+			  <FabricCanvas/>
+			</div>
+		  </div>
+		</FabricContextProvider>
+	  </div>
+	  );
+  }
+}
+
+
+/*
 function App() {
   const {user,isAuthenticated} = useAuth0()
 
-    useEffect(() => {
-        document.body.style.overflow = "hidden";
-      }, []);
+	useEffect(() => {
+		document.body.style.overflow = "hidden";
+	  }, []);
 
-    return (
-      <>
-        <div style={{"padding": "0px 0px", 'height':'100vh' }}>
-          {isAuthenticated ? (
-            <> 
-              <NavBar>
-                <NavItem icon={<ProfileIcon/>}>
-                  <DropdownMenu/>
-                </NavItem>
-              </NavBar>
-              <FabricContextProvider>
-                <div style={{ "display": "flex", "alignItems": "stretch" }}>
-                    <div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
-                      <FabricToolbar/>
-                      
-                      <FpsView width={100} height={20} top={window.innerHeight-50} left={0}/>
-                    </div>
-                    <div style={{ "flex": "1" }}>
-                      <FabricCanvas/>
-                    </div>
-                </div>
-              </FabricContextProvider>
-              
-            </>
-          )
-          :
-          (
-            <>
-              <LoginButton />
-            </>
-          )}
-        </div>
-      </>
-    );
+	return (
+	  <>
+		<div style={{"padding": "0px 0px", 'height':'100vh' }}>
+		  {isAuthenticated ? (
+			<> 
+			  <NavBar>
+				<NavItem icon={<ProfileIcon/>}>
+				  <DropdownMenu/>
+				</NavItem>
+			  </NavBar>
+			  <FabricContextProvider>
+				<div style={{ "display": "flex", "alignItems": "stretch" }}>
+					<div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
+					  <FabricToolbar/>
+
+					  <FpsView width={100} height={20} top={window.innerHeight-50} left={0}/>
+					</div>
+					<div style={{ "flex": "1" }}>
+					  <FabricCanvas/>
+					</div>
+				</div>
+			  </FabricContextProvider>
+
+			</>
+		  )
+		  :
+		  (
+			<>
+			  <LoginButton />
+			</>
+		  )}
+		</div>
+	  </>
+	);
 }
-
+*/
 export default App;
