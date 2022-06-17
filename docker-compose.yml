@@ -1,0 +1,49 @@
+version: "3.9"
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+    volumes:
+      - ./frontend:/frontend/src/app
+    depends_on:
+      - backend
+    working_dir: /frontend/src/app
+    command: npm start
+    stdin_open: true
+    tty: true
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 9000:9000
+    networks:
+      - app-network
+    volumes:
+      - ./backend:/backend
+      - /backend/node_modules
+    depends_on:
+      - mongodb
+    command: /usr/app/node_modules/.bin/nodemon -L src/index.js
+
+  mongodb:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    volumes:
+      - ./data-node:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
