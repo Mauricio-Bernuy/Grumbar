@@ -7,7 +7,6 @@ import { fabric }        from "fabric"
 import { FabricContext }          from "../../context/FabricContext"
 import {
     getActiveStyle,
-    setActiveProp,
     setActiveStyle,
 }                        from "../libs/utils"
 
@@ -94,26 +93,31 @@ const FabricRoom = () => {
 
 		let coordscopy = coords; // using var instead of let in coords may fix this (global ish values?)
 		let polyline = null;
-		fabric.Image.fromURL(file, function(img) {
-			// this scaling reduces pattern resolution, do not use
-			// img.scaleToWidth(100); 
 
-			var patternSourceCanvas = new fabric.StaticCanvas();
+		// var imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/2/22/Wikimapia_logotype.svg'
+		// fabric.Image.fromURL(imageUrl, function(img) {
+		// fabric.Image.fromURL(file, function(img) {
+		fabric.util.loadImage(file,function(img) {
+			// var patternSourceCanvas = new fabric.StaticCanvas();
 
-			patternSourceCanvas.add(img);
-			patternSourceCanvas.renderAll();
-			patternSourceCanvas.setDimensions({
-				width: img.getScaledWidth(),
-				height: img.getScaledHeight(),
-			});
+			// patternSourceCanvas.add(img);
+
+			// patternSourceCanvas.renderAll();
+
+			// patternSourceCanvas.setDimensions({
+			// 	width: img.getScaledWidth(),
+			// 	height: img.getScaledHeight(),
+			// });
 			
 			var pattern = new fabric.Pattern({
-				source: patternSourceCanvas.getElement(),
-				repeat: 'repeat'
+				// source: patternSourceCanvas.getElement(),
+				repeat: 'repeat',
 			}); 
-
+			pattern.source = img
 			// scale with pattern transform to avoid blurring
-			pattern.patternTransform = [0.185, 0, 0, 0.185, 0, 0];
+			// pattern.patternTransform = [0.185, 0, 0, 0.185, 0, 0];
+
+			pattern.patternTransform = [0.3715, 0, 0, 0.3715, 0, 0];
 			
 			polyline = new fabric.Polyline(coordscopy, {
 				...options,
@@ -131,38 +135,11 @@ const FabricRoom = () => {
 			
 			polyline.bringForward();
 			
-		});
+		}.bind(this),{
+			crossOrigin: 'anonymous'
+		  });
 
 		canvas.renderAll();
-
-
-		// mantain a constant wall width and tile scale 
-		canvas.on('object:scaling', function(e) {
-			if (e.target != null) {
-				// handle just object
-				if (e.target.type === 'polyline'){
-					var obj = e.target;
-					obj.fill.patternTransform = [0.185/obj.scaleX, 0, 0, 0.185/obj.scaleY, 0, 0];
-					obj.strokeWidth = (10/obj.scaleX);
-					// console.log(obj.scaleX,obj.scaleY,"applied!")
-				}
-				// handle in group
-				else if(e.target._objects){
-					e.target._objects.forEach(element => {
-						if (element.type === 'polyline'){
-							var obj = element;
-							var relativeX = element.scaleX*e.target.scaleX;
-							var relativeY = element.scaleY*e.target.scaleY;
-							obj.fill.patternTransform = [0.185/relativeX, 0, 0, 0.185/relativeY, 0, 0];
-							obj.strokeWidth = (10/relativeX);
-							// console.log(relativeX,relativeY,"applied!")
-						}
-					});
-				}
-			}
-		});
-
-		
 	};
 
 
@@ -262,13 +239,45 @@ const FabricRoom = () => {
 		});
 	};
 
+	let lock2 = false;
 	const clickOnce = (e) => {
 		if (lock1 === false) {
 		getCoords(e);
 		lock1 = true;
 		}else
 		console.log("Button already pressed.");
+
+		// mantain a constant wall width and tile scale 
+		// SHOULD BE OUTSIDE, CREATES A LOT OF INSTANCES APPARENTLY
+		if (canvas && !lock2){
+			console.log("ran Once")
+			canvas.on('object:scaling', function(e) {
+				if (e.target != null) {
+					// handle just object
+					if (e.target.type === 'polyline'){
+						var obj = e.target;
+						obj.fill.patternTransform = [0.3715/obj.scaleX, 0, 0, 0.3715/obj.scaleY, 0, 0];
+						obj.strokeWidth = (10/obj.scaleX);
+					}
+					// handle in group
+					else if(e.target._objects){
+						e.target._objects.forEach(element => {
+							if (element.type === 'polyline'){
+								var obj = element;
+								var relativeX = element.scaleX*e.target.scaleX;
+								var relativeY = element.scaleY*e.target.scaleY;
+								obj.fill.patternTransform = [0.3715/relativeX, 0, 0, 0.3715/relativeY, 0, 0];
+								obj.strokeWidth = (10/relativeX);
+							}
+						});
+					}
+				}
+			});
+			lock2 = true
+		}
 	};
+
+	
 
     return (
         <>

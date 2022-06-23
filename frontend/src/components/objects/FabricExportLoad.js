@@ -7,22 +7,19 @@ import { fabric }        from "fabric"
 import { FabricContext }          from "../../context/FabricContext"
 import exampleJSON from '../../assets/e.json'
 
-
-// const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
-
 const FabricExportLoad = () => {
     const { canvas, activeObject} = useContext(FabricContext)
 	
 	const ExportJSON = (e) => {
 		const json_data = `data:text/json;chatset=utf-8,${encodeURIComponent(
-			JSON.stringify(canvas.toDatalessJSON())
+			JSON.stringify(canvas.toJSON())
 		  )}`;
 
 		console.log(json_data);
 	
 		const link = document.createElement("a");
 		link.href = json_data;
-		link.download = "data.json";
+		link.download = "map_name.json";
 	
 		link.click();
 	};

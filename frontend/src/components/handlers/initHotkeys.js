@@ -4,10 +4,10 @@ export const initHotkeys = (canvas) => {
     canvas.on('mouse:down', function(opt) {
       var evt = opt.e;
       if (evt.button === 1 || evt.ctrlKey === true) {
-        console.log("pressed click + control")
+        // console.log("pressed click + control")
         var target = canvas.findTarget(opt.e);
         if (target.type === 'polyline' || target.type === 'image') {
-          console.log("found polyline or image")
+          // console.log("found polyline or image")
           canvas.setActiveObject(target);
           // obj should be now either rect, text or null
       } 

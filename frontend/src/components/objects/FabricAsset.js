@@ -78,8 +78,8 @@ const FabricAsset = () => {
             let listener = canvas.__eventListeners['mouse:up'];
             let curr = listener[listener.length - 1];
 
-            console.log("listen: ", listener);
-            console.log("curr: ", curr);
+            // console.log("listen: ", listener);
+            // console.log("curr: ", curr);
             canvas.off('mouse:up', curr);
 
             lock = false;

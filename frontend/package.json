@@ -4,6 +4,11 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.10.1",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@fontsource/roboto": "^4.5.7",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.8.4",
     "@popperjs/core": "^2.11.5",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
@@ -17,6 +22,7 @@
     "react-fps": "^1.0.6",
     "react-popper": "^2.3.0",
     "react-scripts": "^5.0.1",
+    "react-window": "^1.8.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
