@@ -10,11 +10,7 @@ import {
     setActiveStyle,
 }                        from "../libs/utils"
 
-import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
 import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
-
-
-// const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
 
 const FabricRoom = () => {
     const { canvas, activeObject} = useContext(FabricContext)
@@ -94,28 +90,12 @@ const FabricRoom = () => {
 		let coordscopy = coords; // using var instead of let in coords may fix this (global ish values?)
 		let polyline = null;
 
-		// var imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/2/22/Wikimapia_logotype.svg'
-		// fabric.Image.fromURL(imageUrl, function(img) {
-		// fabric.Image.fromURL(file, function(img) {
 		fabric.util.loadImage(file,function(img) {
-			// var patternSourceCanvas = new fabric.StaticCanvas();
-
-			// patternSourceCanvas.add(img);
-
-			// patternSourceCanvas.renderAll();
-
-			// patternSourceCanvas.setDimensions({
-			// 	width: img.getScaledWidth(),
-			// 	height: img.getScaledHeight(),
-			// });
 			
 			var pattern = new fabric.Pattern({
-				// source: patternSourceCanvas.getElement(),
 				repeat: 'repeat',
 			}); 
 			pattern.source = img
-			// scale with pattern transform to avoid blurring
-			// pattern.patternTransform = [0.185, 0, 0, 0.185, 0, 0];
 
 			pattern.patternTransform = [0.3715, 0, 0, 0.3715, 0, 0];
 			

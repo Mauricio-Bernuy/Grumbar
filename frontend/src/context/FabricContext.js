@@ -12,10 +12,17 @@ export const FabricContext = createContext([])
 export const FabricContextProvider = ({ children }) => {
     const [canvas, setCanvas] = useState(null)
     const [activeObject, setActiveObject] = useState(null)
+    const [dimensions, setDimensions] = useState({
+		gridSizeX: 20,
+        gridSizeY: 10,
+    })
+    const [layerLevel, setLayerLevel] = useState(-1)
+    const [prevGrid, setPrevGrid] = useState([])
 
+
+    const [loadedMapName, setloadedMapName] = useState("default_map_name")
     
     const initCanvas = useCallback((el, initialSize) => {
-        // console.log(initialSize)
         const canvasOptions = {
             preserveObjectStacking: true,
             selection: true,
@@ -59,7 +66,14 @@ export const FabricContextProvider = ({ children }) => {
 
     return (
         <FabricContext.Provider
-            value={{ canvas, initCanvas, loadFromJSON, activeObject, setActiveObject }}>
+            value={{ canvas, initCanvas, 
+                    loadFromJSON, activeObject, 
+                    setActiveObject, 
+                    dimensions, setDimensions,
+                    loadedMapName, setloadedMapName,
+                    layerLevel,setLayerLevel,
+                    prevGrid, setPrevGrid
+                    }}>
             {children}
         </FabricContext.Provider>
     )

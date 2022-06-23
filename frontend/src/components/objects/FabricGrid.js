@@ -5,27 +5,16 @@ import React, {
 }                        from "react"
 import { fabric }        from "fabric"
 import { FabricContext }          from "../../context/FabricContext"
-import {
-    getActiveStyle,
-    setActiveProp,
-    setActiveStyle,
-}                        from "../libs/utils"
-
 
 const FabricGrid = () => {
-    const { canvas, activeObject} = useContext(FabricContext)
-	const [options, setOptions] = useState({
-		gridSizeX: 20,
-        gridSizeY: 10,
-    })
+    const { canvas, dimensions, setDimensions, prevGrid, setPrevGrid, layerLevel} = useContext(FabricContext)
 
-    const [prevGrid, setPrevGrid] = useState([])
 
     const updateGridSize = (e) => {
         const value =  parseInt(e.target.value, 10);
         
-        setOptions({
-            ...options,
+        setDimensions({
+            ...dimensions,
             [e.target.name]: value,
         })
     }
@@ -38,15 +27,14 @@ const FabricGrid = () => {
             let linelayer = 1;
             let layerlevel = objects.indexOf(prevGrid[prevGrid.length-1]);
 
-            if (layerlevel > linelayer)
-                linelayer = layerlevel;
+            linelayer = Math.max(linelayer, layerlevel, layerLevel);
 
             for (let i = 0; i < prevGrid.length; i++) {
                 canvas.remove(prevGrid[i])
             }
             
-            let gridSizeX = options.gridSizeX;
-            let gridSizeY = options.gridSizeY;
+            let gridSizeX = dimensions.gridSizeX;
+            let gridSizeY = dimensions.gridSizeY;
             
             let boundBox = new fabric.Rect({
                 width: gridSizeX*100,
@@ -57,7 +45,8 @@ const FabricGrid = () => {
                 selectable: false,
                 hasControls: false,
                 lockMovementX: true,
-                lockMovementY: true,    
+                lockMovementY: true,     
+                excludeFromExport: true,
                 objectCaching: false // MUCH FASTER        
             });
             
@@ -85,6 +74,7 @@ const FabricGrid = () => {
                 hasControls: false,
                 lockMovementX: true,
                 lockMovementY: true,
+                excludeFromExport: true,
                 objectCaching: false // MUCH FASTER RENDERING
             }
             //this is for Y lines
@@ -132,7 +122,7 @@ const FabricGrid = () => {
             }        
             setPrevGrid(gridStore)
         }
-    }, [options, canvas]);
+    }, [dimensions, canvas]);
 
     return (
         <>
@@ -144,7 +134,7 @@ const FabricGrid = () => {
                            className="btn-object-action"
                            name="gridSizeX"
                            min="1"
-                           value={options.gridSizeX}
+                           value={dimensions.gridSizeX}
                            onInput={updateGridSize}
                     />  
                     <input type="number"
@@ -152,7 +142,7 @@ const FabricGrid = () => {
                            className="btn-object-action"
                            name="gridSizeY"
                            min="1"
-                           value={options.gridSizeY}
+                           value={dimensions.gridSizeY}
                            onChange={updateGridSize}
                     />
 
