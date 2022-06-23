@@ -155,6 +155,7 @@ const FabricRoom = () => {
             linelayer = Math.max(linelayer, layerlevel, layerLevel);
 
 			polyline.moveTo(linelayer-1)
+			toggleLockMovement()
 			
 		}.bind(this),{
 			crossOrigin: 'anonymous'
@@ -322,6 +323,7 @@ const FabricRoom = () => {
                            className="toggle-switch-checkbox"
                            name="lockMovement"
 						   defaultChecked={!options.selectable}
+						//    defaultChecked={true}
                            onChange={toggleLockMovement}
                     />
 					<button onClick={bringFw}>Bring Forwards</button>

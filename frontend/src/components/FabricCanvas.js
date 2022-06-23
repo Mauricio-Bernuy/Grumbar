@@ -64,9 +64,8 @@ const FabricCanvas = ({ jsonData = null}) => {
         function handleKeyDown(e) {
             
             if (e.keyCode === 46) { // delete selected objects
-                // console.log(e.target);
-                // console.log(e.keyCode);
-                removeObjects(canvas);
+                if (!canvas.getActiveObject().isEditing) // don't remove if text is being edited
+                    removeObjects(canvas);
             }
             if (e.keyCode === 84) { 
                 // console.log(e.target);
