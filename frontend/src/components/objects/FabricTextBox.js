@@ -25,7 +25,9 @@ const FabricTextBox = () => {
         fontFamily: "arial",
         textDecoration: "normal",
         fill: "#000000",
+        shadow: 0
     })
+    const [hasShadow, setHasShadow] = useState(false)
 
     useEffect(() => {
         setShowTools(activeObject ? activeObject.get("type") === "textbox" : false)
@@ -41,7 +43,8 @@ const FabricTextBox = () => {
                 selectable: getActiveStyle("selectable", activeObject),
 				hasControls: getActiveStyle("hasControls", activeObject),
 				lockMovementX: getActiveStyle("lockMovementX", activeObject),
-				lockMovementY: getActiveStyle("lockMovementY", activeObject)
+				lockMovementY: getActiveStyle("lockMovementY", activeObject),
+                shadow: getActiveStyle("shadow", activeObject)
             }
             setTextOptions({ ...textOptions, ...activeOptions })
         }
@@ -94,9 +97,6 @@ const FabricTextBox = () => {
     let lock = false;
     const addTextBox = (e) => {
         canvas.on('mouse:up', function(opt) {
-
-
-            console.log(textOptions)
             let textBox = new fabric.Textbox("Add your text here", {
                 width: 200,
                 top: 10,
@@ -105,9 +105,11 @@ const FabricTextBox = () => {
                 fontWeight: "normal",
                 fontStyle: "normal",
                 textAlign: "left",
-                fontFamily: "arial",
+                // fontFamily: "arial",
+                fontFamily: 'Calibri',
                 textDecoration: "normal",
                 fill: "#000000",
+                
             })
 
             let pointer = canvas.getPointer(opt.e);
@@ -126,6 +128,25 @@ const FabricTextBox = () => {
             canvas.add(textBox)
             lock = false;
         })
+    }
+
+    const toggleShadow = (e) => {
+        if (hasShadow){
+            setTextOptions({
+                ...textOptions,
+                shadow: 0
+            })
+            setActiveStyle("shadow", 0, activeObject)
+        }
+        else{
+            let shad = 'rgba(0,0,0,0.3) 1px 1px 1px'
+            setTextOptions({
+                ...textOptions,
+                shadow: shad
+            })
+            setActiveStyle("shadow", shad, activeObject)
+        }
+        setHasShadow(!hasShadow)
     }
 
     const updateFontSize = (e) => {
@@ -244,15 +265,26 @@ const FabricTextBox = () => {
                         </button>
                     </div>
 
-                    <label htmlFor="LockMovement">Lock Movement:</label>
+                    <label htmlFor="ToggleShadow">Toggle Shadow:</label>
                     <input type="checkbox"
                            style={{ "width": "40px" }}
                            className="toggle-switch-checkbox"
                            name="strokeWidth"
+						   defaultChecked={hasShadow}
+                           onChange={toggleShadow}
+                    />
+                    <hr/>
+
+                    <label htmlFor="LockMovement">Lock Movement:</label>
+                    <input type="checkbox"
+                           style={{ "width": "40px" }}
+                           className="toggle-switch-checkbox"
+                           name="lockMovement"
 						   defaultChecked={!textOptions.selectable}
                            onChange={toggleLockMovement}
                     />
                     <hr/>
+                    
                     <button onClick={bringFw}>Bring Forwards</button>
 					<button onClick={sendBw}>Send Backwards</button>
                 </div>
