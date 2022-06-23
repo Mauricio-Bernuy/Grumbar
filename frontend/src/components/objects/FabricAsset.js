@@ -13,7 +13,7 @@ import {
 import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
 
 const FabricAsset = () => {
-    const { canvas, activeObject} = useContext(FabricContext)
+    const { canvas, activeObject, prevGrid, layerLevel } = useContext(FabricContext)
 	const [showTools, setShowTools] = useState(false)
 	const [options, setOptions] = useState({
 		selectable: true,
@@ -48,8 +48,25 @@ const FabricAsset = () => {
         setOptions({
             ...options,
         })
+
+        let objects = canvas.getObjects();
+		let l = objects.indexOf(activeObject)
+		let linelayer = 1;
+        let lyrs = []
+
+		prevGrid.forEach(element => {
+			lyrs.push(objects.indexOf(element))
+		});
+		lyrs.shift()
+		let layerlevel = Math.max.apply(null, lyrs)
+        // console.log(lyrs,layerlevel)
+
+		linelayer = Math.max(linelayer, layerlevel, layerLevel);
+        
+
+		if (l > (linelayer+1))
+            activeObject.sendBackwards();
 			
-		activeObject.sendBackwards();
     }
 
 	const toggleLockMovement = (e) => {
@@ -78,8 +95,6 @@ const FabricAsset = () => {
             let listener = canvas.__eventListeners['mouse:up'];
             let curr = listener[listener.length - 1];
 
-            // console.log("listen: ", listener);
-            // console.log("curr: ", curr);
             canvas.off('mouse:up', curr);
 
             lock = false;

@@ -13,7 +13,7 @@ import {
 import testfloor from '../../assets/floor textures/Rock Tiles A.jpg'
 
 const FabricRoom = () => {
-    const { canvas, activeObject} = useContext(FabricContext)
+    const { canvas, activeObject, prevGrid, layerLevel} = useContext(FabricContext)
 	const [showTools, setShowTools] = useState(false)
 	const [options, setOptions] = useState({
 		selectable: false,
@@ -56,24 +56,47 @@ const FabricRoom = () => {
 		setActiveStyle("hasControls", !getActiveStyle("hasControls", activeObject), activeObject)
 		setActiveStyle("lockMovementX", !getActiveStyle("lockMovementX", activeObject), activeObject)
 		setActiveStyle("lockMovementY", !getActiveStyle("lockMovementY", activeObject), activeObject)
-		activeObject.sendToBack();
+		// activeObject.sendToBack();
 			
-		activeObject.bringForward();
+		// activeObject.bringForward();
     }
 	const bringFw = (e) => {
         setOptions({
             ...options,
         })
-			
-		activeObject.bringForward();
+		let objects = canvas.getObjects();
+		let l = objects.indexOf(activeObject)
+
+		let linelayer = 1;
+		
+		let lyrs = []
+		prevGrid.forEach(element => {
+			lyrs.push(objects.indexOf(element))
+		});
+		lyrs.shift()
+		let layerlevel = Math.min.apply(null, lyrs)
+
+		// let layerlevel = objects.indexOf(prevGrid[prevGrid.length]);
+        // console.log(lyrs,Math.min.apply(null, lyrs))
+
+		
+		linelayer = Math.max(linelayer, layerlevel, layerLevel);
+		
+        // console.log(l, linelayer)
+
+		if (l < (linelayer-1))
+			activeObject.bringForward();
     }
 
 	const sendBw = (e) => {
         setOptions({
             ...options,
         })
-			
-		activeObject.sendBackwards();
+
+		let objects = canvas.getObjects();
+		let l = objects.indexOf(activeObject)
+		if (l > 1)
+			activeObject.sendBackwards();
     }
 
 
@@ -107,6 +130,7 @@ const FabricRoom = () => {
 				dirty: false,
 				strokeWidth:10,
 				hoverCursor: 'cell',
+				// perPixelTargetFind: true,
 				objectCaching: false // greatly increases render resolution
 			});
 			canvas.add(polyline); 
@@ -114,6 +138,23 @@ const FabricRoom = () => {
 			polyline.sendToBack();
 			
 			polyline.bringForward();
+
+			let objects = canvas.getObjects();
+            
+            let linelayer = 1;
+			
+			let lyrs = []
+			prevGrid.forEach(element => {
+				lyrs.push(objects.indexOf(element))
+			});
+			lyrs.shift()
+			let layerlevel = Math.min.apply(null, lyrs)
+			// linelayer = Math.max(linelayer, layerlevel, layerLevel);
+            // let layerlevel = objects.indexOf(prevGrid[prevGrid.length-1]);
+			
+            linelayer = Math.max(linelayer, layerlevel, layerLevel);
+
+			polyline.moveTo(linelayer-1)
 			
 		}.bind(this),{
 			crossOrigin: 'anonymous'

@@ -12,7 +12,7 @@ import {
 }                        from "../libs/utils"
 
 const FabricTextBox = () => {
-    const { canvas, activeObject } = useContext(FabricContext)
+    const { canvas, activeObject, prevGrid, layerLevel } = useContext(FabricContext)
     const [showTools, setShowTools] = useState(false)
     const [textOptions, setTextOptions] = useState({
         width: 200,
@@ -38,12 +38,58 @@ const FabricTextBox = () => {
                 fontFamily: getActiveStyle("fontFamily", activeObject),
                 textDecoration: getActiveStyle("textDecoration", activeObject),
                 fill: getActiveStyle("fill", activeObject),
+                selectable: getActiveStyle("selectable", activeObject),
+				hasControls: getActiveStyle("hasControls", activeObject),
+				lockMovementX: getActiveStyle("lockMovementX", activeObject),
+				lockMovementY: getActiveStyle("lockMovementY", activeObject)
             }
             setTextOptions({ ...textOptions, ...activeOptions })
         }
     }, [activeObject])
 
+    const bringFw = (e) => {
+        setTextOptions({
+            ...textOptions,
+        })
+			
+		activeObject.bringForward();
+    }
+
+	const sendBw = (e) => {
+        setTextOptions({
+            ...textOptions,
+        })
+
+        let objects = canvas.getObjects();
+		let l = objects.indexOf(activeObject)
+		let linelayer = 1;
+        let lyrs = []
+
+		prevGrid.forEach(element => {
+			lyrs.push(objects.indexOf(element))
+		});
+		lyrs.shift()
+		let layerlevel = Math.max.apply(null, lyrs)
+        // console.log(lyrs,layerlevel)
+
+		linelayer = Math.max(linelayer, layerlevel, layerLevel);
+        
+
+		if (l > (linelayer+1))
+            activeObject.sendBackwards();
+			
+    }
+
     //add layer buttons and locking
+    const toggleLockMovement = (e) => {
+        setTextOptions({
+            ...textOptions,
+        })
+        setActiveStyle("selectable", !getActiveStyle("selectable", activeObject), activeObject)
+		setActiveStyle("hasControls", !getActiveStyle("hasControls", activeObject), activeObject)
+		setActiveStyle("lockMovementX", !getActiveStyle("lockMovementX", activeObject), activeObject)
+		setActiveStyle("lockMovementY", !getActiveStyle("lockMovementY", activeObject), activeObject)
+    }
     
     let lock = false;
     const addTextBox = (e) => {
@@ -197,6 +243,18 @@ const FabricTextBox = () => {
                             <u>U</u>
                         </button>
                     </div>
+
+                    <label htmlFor="LockMovement">Lock Movement:</label>
+                    <input type="checkbox"
+                           style={{ "width": "40px" }}
+                           className="toggle-switch-checkbox"
+                           name="strokeWidth"
+						   defaultChecked={!textOptions.selectable}
+                           onChange={toggleLockMovement}
+                    />
+                    <hr/>
+                    <button onClick={bringFw}>Bring Forwards</button>
+					<button onClick={sendBw}>Send Backwards</button>
                 </div>
             }
             <hr/>
