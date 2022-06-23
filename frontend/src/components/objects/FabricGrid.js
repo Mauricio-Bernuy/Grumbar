@@ -62,7 +62,7 @@ const FabricGrid = () => {
             boundBox.name= "bound";
     
             canvas.add(boundBox);
-            canvas.centerObject(boundBox);
+            // canvas.centerObject(boundBox);
             boundBox.sendToBack();
 			
             gridStore.push(boundBox);
