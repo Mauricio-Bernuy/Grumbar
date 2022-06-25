@@ -1,8 +1,8 @@
-version: "3.9"
+version: '3.9'
 services:
   frontend:
     restart: always
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
@@ -16,7 +16,7 @@ services:
     working_dir: /frontend
     stdin_open: true
     tty: true
-  
+
   backend:
     restart: always
     build:
@@ -27,7 +27,9 @@ services:
     networks:
       - app-network
     volumes:
-      - ./backend:/backend
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
     depends_on:
       - mongodb
 
@@ -45,4 +47,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
