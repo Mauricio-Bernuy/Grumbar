@@ -2,9 +2,12 @@ import React, {
 	useContext, 
 }                        from "react"
 import { FabricContext }          from "../../context/FabricContext"
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Box from '@mui/material/Box';
 
 const FabricExportLoad = () => {
-    const { canvas, dimensions, setDimensions, loadedMapName, setLayerLevel, prevGrid} = useContext(FabricContext)
+    const { canvas, dimensions, setDimensions, loadedMapName, setLayerLevel, prevGrid, centerCanvasOnGrid} = useContext(FabricContext)
 	
 	const ExportJSON = (e) => {
 		
@@ -24,11 +27,7 @@ const FabricExportLoad = () => {
 		const link = document.createElement("a");
 		link.href = json_data;
 		link.download = loadedMapName + ".grum";
-	
-		// link.href = canvas.toSVG();
-		// link.download = loadedMapName + ".png";
-
-		link.click();
+		link.click()
 	};
 
 	const addTextBox = (e) => {
@@ -117,15 +116,68 @@ const FabricExportLoad = () => {
 		
 	};
 
+	const ExportIMG = (e) => {
+
+		let prevState = centerCanvasOnGrid()
+
+		prevGrid.forEach(element => {
+			element.set({excludeFromExport: false})
+		});
+
+		let bg = canvas.backgroundColor
+		canvas.backgroundColor = 'rgba(0,0,0,0)'
+		
+		const link = document.createElement('a');
+		link.href = canvas.toSVG();
+
+		const svgd = `data:text/html;chatset=utf-8,${encodeURIComponent(
+			canvas.toSVG()
+		)}`;
+
+		link.href = svgd;
+		link.download = loadedMapName + ".svg";
+		
+		link.click();
+
+		prevGrid.forEach(element => {
+			element.set({excludeFromExport: true})
+		});
+		
+		canvas.setViewportTransform(prevState.vpt)
+		canvas.backgroundColor = bg
+
+		link.click();
+
+	};
 	
     return (
         <>
-			<hr/>
-            <button onClick={ExportJSON}>Export Map File</button>
-			<button onClick={addTextBox}>Load Map File</button>
-            <input type="file" id="fabric-file-upload" accept=".grum" onChange={LoadJSON}
-                   style={{ display: "none" }}/>
-			<hr/>
+			<Box
+			sx={{
+				display: 'flex',
+				'& > *': {
+				m: 1,
+				},
+			}}
+			style={{
+				justifyContent: "center",
+				backgroundColor: "transparent",
+				}}
+			>
+			<ButtonGroup size="tiny"
+				orientation="vertical"
+				aria-label="vertical outlined button group"
+			>
+				<Button key="Export Map File" onClick={ExportJSON}>Export</Button>
+				<Button key="Load Map File"  onClick={addTextBox}>Load</Button>
+				<Button key="Export IMG File" onClick={ExportIMG}>IMG</Button>
+			</ButtonGroup>
+
+			
+			<input type="file" id="fabric-file-upload" accept=".grum" onChange={LoadJSON}
+				style={{ display: "none" }}/>
+
+			</Box>
         </>
     )
 }

@@ -49,7 +49,8 @@ const FabricLine = () => {
             }
             setOptions({ ...options, ...activeOptions })
         }
-    }, [activeObject    ])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeObject])
 
     return (
         <>

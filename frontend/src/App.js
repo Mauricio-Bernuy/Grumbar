@@ -15,6 +15,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+
 function App() {
   const {user,isAuthenticated} = useAuth0()
 
@@ -34,7 +35,9 @@ function App() {
               </NavBar>
               <FabricContextProvider>
                 <div style={{ "display": "flex", "alignItems": "stretch" }}>
-                    <div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
+                    {/* <div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}> */}
+                    <div>
+
                       <FabricToolbar/>
                       
                       <FpsView width={100} height={20} top={window.innerHeight-50} left={0}/>

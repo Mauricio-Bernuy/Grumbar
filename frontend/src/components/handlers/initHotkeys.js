@@ -1,14 +1,17 @@
 
-export const initHotkeys = (canvas) => {
+export const initHotkeys = (canvas, canvasState) => {
+    let lastsel = canvas.selection
+    if (canvasState)
+      console.log(canvasState.selection)
 
     canvas.on('mouse:down', function(opt) {
       var evt = opt.e;
       if (evt.button === 1 || evt.ctrlKey === true) {
         // console.log("pressed click + control")
         var target = canvas.findTarget(opt.e);
-        if (target.type === 'polyline' 
+        if ((target.type === 'polyline' 
           || target.type === 'image'
-          || target.type === 'textbox') {
+          || target.type === 'textbox') && canvas.selection) {
           // console.log("found polyline or image")
           canvas.setActiveObject(target);
           // obj should be now either rect, text or null
@@ -20,6 +23,7 @@ export const initHotkeys = (canvas) => {
         var evt = opt.e;
         if (evt.button === 1 || evt.altKey === true) {
           this.isDragging = true;
+          lastsel = this.selection
           this.selection = false;
           this.lastPosX = evt.clientX;
           this.lastPosY = evt.clientY;
@@ -41,7 +45,9 @@ export const initHotkeys = (canvas) => {
         // for all objects, so we call setViewportTransform
         this.setViewportTransform(this.viewportTransform);
         this.isDragging = false;
-        this.selection = true;
+        this.selection = lastsel;
+        // this.selection = true;
+
       });
 
 
@@ -52,6 +58,7 @@ export const initHotkeys = (canvas) => {
         if (zoom > 20) zoom = 20;
         if (zoom < 0.01) zoom = 0.01;
         // canvas.setZoom(zoom);
+        // console.log(zoom, opt.e.offsetX, opt.e.offsetY)
         canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
         opt.e.preventDefault();
         opt.e.stopPropagation();
