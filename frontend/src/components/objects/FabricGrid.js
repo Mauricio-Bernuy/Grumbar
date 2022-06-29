@@ -15,6 +15,7 @@ import Paper from "@mui/material/Paper";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import Popper from "@mui/material/Popper";
+import { TextField } from "@mui/material";
 
 const FabricGrid = () => {
   const {
@@ -169,7 +170,7 @@ const FabricGrid = () => {
       <div>
         {anchorEl && (
           <Popper id={"simple-popper"} anchorEl={anchorEl} open={true}>
-            <Paper sx={{ width: 180, maxWidth: "100%" }}>
+            <Paper sx={{height: "65px",width: "300px", maxWidth: "100%", backgroundColor: 'rgba(255,255,255,0.8)', }}>
               <MenuList>
                 <MenuItem
                   style={{
@@ -178,41 +179,39 @@ const FabricGrid = () => {
                   }}
                   disableRipple={true}
                 >
-                  <ListItemText style={{ textAlign: "center" }}>
-                    <Typography variant="h6" style={{ color: "gray" }}>
-                      Grid Dimensions
+                  <Typography variant="overline" style={{ color: "gray", marginRight:"10px" }}>
+                      Grid 
+                      Dimensions
                     </Typography>
-                  </ListItemText>
-                </MenuItem>
 
-                <MenuItem
-                  style={{
-                    justifyContent: "center",
-                    backgroundColor: "transparent",
-                  }}
-                  disableRipple={true}
-                >
-                <Tooltip title="Horizontal Dimensions" placement="bottom">
-                    <input type="number"
-                        style={{ "width": "40px" }}
-                        className="btn-object-action"
-                        name="gridSizeX"
-                        min="1"
-                        value={dimensions.gridSizeX}
-                        onInput={updateGridSize}
-                    />  
-                </Tooltip>
-                <Tooltip title="Horizontal Dimensions" placement="bottom">
-                    <input type="number"
-                        style={{ "width": "40px" }}
-                        className="btn-object-action"
-                        name="gridSizeY"
-                        min="1"
-                        value={dimensions.gridSizeY}
-                        onChange={updateGridSize}
-                    /> 
-                </Tooltip>
-                
+                    <TextField
+                      type="number"
+                      name="gridSizeX"
+                      label="Horizontal"
+                      variant="standard"
+                      size="small"
+                      InputProps={{
+                        inputProps: { 
+                            min: 1 
+                          }
+                      }}
+                      value={dimensions.gridSizeX}
+                      onChange={updateGridSize}
+                    />
+                    <TextField
+                      type="number"
+                      name="gridSizeY"
+                      label="Vertical"
+                      variant="standard"
+                      size="small"
+                      InputProps={{
+                        inputProps: { 
+                            min: 1 
+                          }
+                      }}
+                      value={dimensions.gridSizeY}
+                      onChange={updateGridSize}
+                    />                
                 </MenuItem>
               </MenuList>
             </Paper>

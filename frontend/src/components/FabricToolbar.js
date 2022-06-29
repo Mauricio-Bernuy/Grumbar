@@ -54,6 +54,7 @@ import TextFieldsIcon from "@mui/icons-material/TextFields";
 import ChairIcon from "@mui/icons-material/Chair";
 import PolylineIcon from "@mui/icons-material/Polyline";
 import Switch from "@mui/material/Switch";
+import Box from '@mui/material/Box';
 
 import TitlebarImageList from "./assetGallery";
 
@@ -62,8 +63,13 @@ const FabricToolbar = (props) => {
 
   const [assetOpen, setAssetOpen] = React.useState(false);
 
-  const handleAssetClick = () => {
-    setAssetOpen(!assetOpen);
+  const toggleDrawer = (value) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      // console.log("owo")
+      return;
+    }
+  
+    setAssetOpen(value);
   };
 
   const theme = useTheme();
@@ -128,7 +134,7 @@ const FabricToolbar = (props) => {
 
         {/* toolbar drawer */}
 
-      <Drawer variant="permanent" open={false}>
+      <Drawer variant="permanent" open={false} >
         <List
           sx={{
             width: "100%",
@@ -137,12 +143,13 @@ const FabricToolbar = (props) => {
           }}
           component="nav"
           aria-labelledby="nested-list-subheader"
+          
         >
           <ListSubheader component="div" id="nested-list-subheader">
             Tools
           </ListSubheader>
         
-        {/* tool 1  */}
+        {/* Asset Tool*/}
           <HtmlTooltip
             title={
               <React.Fragment>
@@ -151,7 +158,7 @@ const FabricToolbar = (props) => {
               </React.Fragment>
             }
           >
-            <ListItemButton onClick={handleAssetClick}>
+            <ListItemButton onClick={toggleDrawer(true)}>
               <ListItemIcon>
                 <ChairIcon />
               </ListItemIcon>
@@ -161,7 +168,7 @@ const FabricToolbar = (props) => {
 
           <FabricAsset/>
         
-        {/* tool 2  */}
+        {/* Room Tool  */}
             
         <FabricRoom/>
 
@@ -170,7 +177,7 @@ const FabricToolbar = (props) => {
 
         <FabricTextBox/>
          
-          <Divider />
+        <Divider/>
 
         <FabricExportLoad/>
 
@@ -182,7 +189,17 @@ const FabricToolbar = (props) => {
       
       {/* asset drawer */}
 
-      <MuiDrawer variant="temporary" open={assetOpen}>
+      <MuiDrawer variant="temporary" open={assetOpen} 
+        onClose={toggleDrawer(false)}
+        BackdropProps={{ invisible: true }}
+        >
+
+        <Box
+        sx={{ width: 'auto'}}
+        role="presentation"
+        // onClick={toggleDrawer( false)}
+        onKeyDown={toggleDrawer( false)}
+      >
         <List
           sx={{ width: 360, maxWidth: 360, bgcolor: "background.paper" }}
           component="nav"
@@ -190,7 +207,11 @@ const FabricToolbar = (props) => {
           subheader={
             <ListSubheader component="div" id="nested-list-subheader">
               Asset Selection
-              <IconButton onClick={handleAssetClick}>
+              <IconButton 
+                onClick={
+                  toggleDrawer(false)
+                }
+              >
                 {theme.direction === "rtl" ? (
                   <ChevronRightIcon />
                 ) : (
@@ -204,6 +225,7 @@ const FabricToolbar = (props) => {
           <TitlebarImageList name="Category 2" setAssetOpen={setAssetOpen} />
           <TitlebarImageList name="Category 3" setAssetOpen={setAssetOpen} />
         </List>
+        </Box>
       </MuiDrawer>
 
     </>

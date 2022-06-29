@@ -46,6 +46,7 @@ const FabricRoom = () => {
     layerLevel,
     removeObjects,
   } = useContext(FabricContext);
+  
   const [showTools, setShowTools] = useState(false);
   const [options, setOptions] = useState({
     selectable: false,
@@ -193,8 +194,6 @@ const FabricRoom = () => {
         });
         lyrs.shift();
         let layerlevel = Math.min.apply(null, lyrs);
-        // linelayer = Math.max(linelayer, layerlevel, layerLevel);
-        // let layerlevel = objects.indexOf(prevGrid[prevGrid.length-1]);
 
         linelayer = Math.max(linelayer, layerlevel, layerLevel);
 
@@ -394,7 +393,7 @@ const FabricRoom = () => {
 
   return (
     <>
-      <HtmlTooltip
+      <HtmlTooltip 
         title={
           <React.Fragment>
             <Typography color="inherit">Room Tool</Typography>
