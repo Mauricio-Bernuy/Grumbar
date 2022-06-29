@@ -44,6 +44,8 @@ const FabricTextBox = () => {
     prevGrid,
     layerLevel,
     removeObjects,
+    toggleLock,
+    Copy,
   } = useContext(FabricContext);
   const [showTools, setShowTools] = useState(false);
   const [textOptions, setTextOptions] = useState({
@@ -111,33 +113,6 @@ const FabricTextBox = () => {
     linelayer = Math.max(linelayer, layerlevel, layerLevel);
 
     if (l > linelayer + 1) activeObject.sendBackwards();
-  };
-
-  //add layer buttons and locking
-  const toggleLockMovement = (e) => {
-    setTextOptions({
-      ...textOptions,
-    });
-    setActiveStyle(
-      "selectable",
-      !getActiveStyle("selectable", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "hasControls",
-      !getActiveStyle("hasControls", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "lockMovementX",
-      !getActiveStyle("lockMovementX", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "lockMovementY",
-      !getActiveStyle("lockMovementY", activeObject),
-      activeObject
-    );
   };
 
   let lock = false;
@@ -308,7 +283,7 @@ const FabricTextBox = () => {
             anchorEl={anchorEl}
             open={true}
           >
-            <Paper sx={{ width: 180, maxWidth: "100%" }}>
+            <Paper sx={{ width: 180, maxWidth: "100%", backgroundColor: 'rgba(255,255,255,0.85)',  }}>
               <MenuList>
                 <MenuItem
                   style={{
@@ -404,7 +379,7 @@ const FabricTextBox = () => {
 
                 <MenuItem
                   onClick={() => {
-                    toggleLockMovement();
+                    toggleLock(setTextOptions, textOptions);
                   }}
                 >
                   <ListItemIcon>
@@ -420,11 +395,15 @@ const FabricTextBox = () => {
                       : "Unlock"}
                   </ListItemText>
                   <Typography variant="body2" color="text.secondary">
-                    L
+                    ctrl+L
                   </Typography>
                 </MenuItem>
 
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    Copy();
+                  }}
+                >
                   <ListItemIcon>
                     <ContentCopy fontSize="small" />
                   </ListItemIcon>

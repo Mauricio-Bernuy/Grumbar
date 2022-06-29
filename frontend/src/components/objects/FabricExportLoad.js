@@ -186,7 +186,7 @@ const FabricExportLoad = () => {
     canvas.setViewportTransform(prevState.vpt);
     canvas.backgroundColor = bg;
 
-    link.click();
+    // link.click();
   };
 
   return (

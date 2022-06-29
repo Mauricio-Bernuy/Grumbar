@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { FabricContext } from "../context/FabricContext";
 import { fabric } from "fabric";
+import { getActiveStyle, setActiveProp, setActiveStyle } from "../components/libs/utils";
 
 const FabricCanvas = ({ jsonData = null }) => {
   const [width] = useState(window.innerWidth);
@@ -23,6 +24,9 @@ const FabricCanvas = ({ jsonData = null }) => {
     Copy,
     Paste,
     prevGrid,
+    coords,
+    toggleLock,
+    activeObject
   } = useContext(FabricContext);
 
   useLayoutEffect(() => {
@@ -52,7 +56,6 @@ const FabricCanvas = ({ jsonData = null }) => {
       return;
     }
 
-    let lastsel = canvas.selection;
 
     canvas.on("mouse:down", function(opt) {
       //   console.log("selectable=", canvas.selection);
@@ -78,7 +81,6 @@ const FabricCanvas = ({ jsonData = null }) => {
       if (evt.button === 1 || evt.altKey === true) {
         canvas.discardActiveObject().renderAll();
         this.isDragging = true;
-        lastsel = this.selection;
         this.selection = false;
         this.lastPosX = evt.clientX;
         this.lastPosY = evt.clientY;
@@ -100,7 +102,6 @@ const FabricCanvas = ({ jsonData = null }) => {
       // for all objects, so we call setViewportTransform
       this.setViewportTransform(this.viewportTransform);
       this.isDragging = false;
-      // this.selection = lastsel;
       this.selection = true;
     });
 
@@ -117,13 +118,23 @@ const FabricCanvas = ({ jsonData = null }) => {
       opt.e.stopPropagation();
     });
 
+    setTimeout(function() {
+      canvas.on("mouse:move", function(o) {
+        var pointer = canvas.getPointer(o.e);
+        var px = pointer.x; //o.e.layerX
+        var py = pointer.y; //o.e.layerY
+        coords.current = { x: px, y: py };
+        // const sleep = ms => new Promise(r => setTimeout(r, ms));
+      });
+    }, 100);
     return () => {
       canvas.off("mouse:down");
       canvas.off("mouse:move");
       canvas.off("mouse:up");
       canvas.off("mouse:wheel");
+      canvas.off("mouse:move");
     };
-  }, [canvas]);
+  }, [canvas, coords]);
 
   useEffect(() => {
     if (!canvas) {
@@ -143,15 +154,16 @@ const FabricCanvas = ({ jsonData = null }) => {
   // hotkey listener
   useEffect(() => {
     function handleKeyDown(e) {
-      // function to check the detection
-      e = e || window.event; // Event object 'ev'
-      var key = e.which || e.keyCode; // Detecting keyCode
+      e = e || window.event;
+      var key = e.which || e.keyCode;
 
       // Detecting Ctrl
       var ctrl = e.ctrlKey ? e.ctrlKey : key === 17 ? true : false;
 
       // del key
       if (key === 46) {
+        if (!canvas.getActiveObject()) return;
+
         // delete selected objects
         if (!canvas.getActiveObject().isEditing)
           // don't remove if text is being edited
@@ -159,19 +171,30 @@ const FabricCanvas = ({ jsonData = null }) => {
       }
       // ctrl + C
       if (key === 67 && ctrl) {
-        console.log("Ctrl+C is pressed.");
-        Copy();
+        if (!canvas.getActiveObject()) return;
+        if (!canvas.getActiveObject().isEditing) {
+          e.preventDefault();
+          console.log("Ctrl+C is pressed.");
+          Copy();
+        }
       }
       // ctrl + V
       if (key === 86 && ctrl) {
-        console.log("Ctrl+V is pressed.");
-        // console.log(prevGrid);
-        // Paste(prevGrid);
-        Paste();
+        let v = true;
+        if (canvas.getActiveObject())
+          if (canvas.getActiveObject().isEditing) v = false;
+
+        if (v) {
+          e.preventDefault();
+          console.log("Ctrl+V is pressed.");
+          Paste();
+        }
       }
 
       // ctrl + A
       if (key === 65 && ctrl) {
+        e.preventDefault();
+
         canvas.discardActiveObject();
 
         var selection = [];
@@ -196,11 +219,25 @@ const FabricCanvas = ({ jsonData = null }) => {
 
       // ctrl + X
       if (key === 88 && ctrl) {
-        console.log("Ctrl+X is pressed.");
+        if (!canvas.getActiveObject()) return;
         if (!canvas.getActiveObject().isEditing) {
           // don't remove if text is being edited
+          console.log("Ctrl+X is pressed.");
+          e.preventDefault();
           Copy();
           removeObjects();
+        }
+      }
+      // ctrl + L
+      if (key === 76 && ctrl) {
+        e.preventDefault();
+        console.log("Ctrl+L is pressed.");
+        if (!canvas.getActiveObject()) return;
+
+        if (!canvas.getActiveObject().isEditing) {
+          // don't remove if text is being edited
+            toggleLock();
+    
         }
       }
 
@@ -208,13 +245,26 @@ const FabricCanvas = ({ jsonData = null }) => {
       }
     }
 
+    const ignore = (e) => {
+      e = e || window.event;
+      var key = e.which || e.keyCode;
+
+      // // Detecting Ctrl
+      // var ctrl = e.ctrlKey ? e.ctrlKey : key === 17 ? true : false;
+      // if (key === 76 && ctrl) {
+      //   e.preventDefault();
+      // }
+    };
+
+    document.addEventListener("keydown", ignore);
     document.addEventListener("keydown", handleKeyDown);
 
     return function cleanup() {
+      document.removeEventListener("keydown", ignore);
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvas, prevGrid]);
+  }, [canvas, prevGrid, coords, activeObject, setActiveStyle, getActiveStyle]);
 
   useEffect(() => {
     // handle dynamic window resize

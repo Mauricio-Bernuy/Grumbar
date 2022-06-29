@@ -33,10 +33,10 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const FabricRoom = () => {
   const {
@@ -45,17 +45,19 @@ const FabricRoom = () => {
     prevGrid,
     layerLevel,
     removeObjects,
+    Copy,
+    toggleLock,
   } = useContext(FabricContext);
-  
+
   const [showTools, setShowTools] = useState(false);
   const [options, setOptions] = useState({
-    selectable: false,
+    selectable: true,
     strokeWidth: 1,
-    hasControls: false,
-    lockMovementX: true,
-    lockMovementY: true,
-    lockSkewingX: true,
-    lockSkewingY: true,
+    hasControls: true,
+    lockMovementX: false,
+    lockMovementY: false,
+    lockSkewingX: false,
+    lockSkewingY: false,
   });
 
   useEffect(() => {
@@ -83,31 +85,6 @@ const FabricRoom = () => {
     setActiveStyle("strokeWidth", parseInt(e.target.value, 10), activeObject);
   };
 
-  const toggleLockMovement = (e) => {
-    setOptions({
-      ...options,
-    });
-    setActiveStyle(
-      "selectable",
-      !getActiveStyle("selectable", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "hasControls",
-      !getActiveStyle("hasControls", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "lockMovementX",
-      !getActiveStyle("lockMovementX", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "lockMovementY",
-      !getActiveStyle("lockMovementY", activeObject),
-      activeObject
-    );
-  };
   const bringFw = (e) => {
     setOptions({
       ...options,
@@ -149,6 +126,7 @@ const FabricRoom = () => {
   let templines = [];
 
   const addPolyLine = (e) => {
+    canvas.discardActiveObject();
     coords.pop();
     coords.push(coords[0]);
 
@@ -198,7 +176,15 @@ const FabricRoom = () => {
         linelayer = Math.max(linelayer, layerlevel, layerLevel);
 
         polyline.moveTo(linelayer - 1);
-        // toggleLockMovement();
+        toggleLock(setOptions, options);
+
+        setOptions({
+          ...options,
+        });
+        setActiveStyle("selectable", false, polyline);
+        setActiveStyle("hasControls", false, polyline);
+        setActiveStyle("lockMovementX", true, polyline);
+        setActiveStyle("lockMovementY", true, polyline);
 
         // eslint-disable-next-line no-extra-bind
       }.bind(this),
@@ -213,12 +199,12 @@ const FabricRoom = () => {
   let lock1 = false;
   var detectionRadius = 20; // px
   const getCoords = (e) => {
-		canvas.selection = false;
-	  canvas.renderAll()
-    canvas.on("mouse:up", function(opt) {  
-	  canvas.selection = false;
-	  canvas.renderAll()
-	  let x, y;
+    canvas.selection = false;
+    canvas.renderAll();
+    canvas.on("mouse:up", function(opt) {
+      canvas.selection = false;
+      canvas.renderAll();
+      let x, y;
       let pointer = canvas.getPointer(opt.e);
       x = pointer.x;
       y = pointer.y;
@@ -307,14 +293,12 @@ const FabricRoom = () => {
 
             coords = [];
             tempoverlay = [];
-			
-			canvas.selection = true;
 
+            canvas.selection = true;
           }
         }
       }
     });
-
   };
 
   let lock2 = false;
@@ -382,7 +366,6 @@ const FabricRoom = () => {
     },
   }));
 
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const divRef = React.useRef();
 
@@ -390,10 +373,9 @@ const FabricRoom = () => {
     setAnchorEl(divRef.current);
   }, [divRef]);
 
-
   return (
     <>
-      <HtmlTooltip 
+      <HtmlTooltip
         title={
           <React.Fragment>
             <Typography color="inherit">Room Tool</Typography>
@@ -405,7 +387,6 @@ const FabricRoom = () => {
           onClick={() => {
             clickOnce();
           }}
-
         >
           <ListItemIcon>
             <PolylineIcon />
@@ -414,31 +395,38 @@ const FabricRoom = () => {
           <ListItemText primary="" />
         </ListItemButton>
       </HtmlTooltip>
-		
-	  <div ref={divRef}/>
+
+      <div ref={divRef} />
       {showTools && (
         <div>
           <Popper
             style={{
-              position:"absolute",
-			  paddingLeft: "70px"
+              position: "absolute",
+              paddingLeft: "70px",
             }}
             id={"simple-popper"}
-			anchorEl={anchorEl}
+            anchorEl={anchorEl}
             open={true}
           >
-            <Paper sx={{ width: 180, maxWidth: "100%" }}>
+            <Paper sx={{ width: 180, maxWidth: "100%", backgroundColor: 'rgba(255,255,255,0.85)',  }}>
               <MenuList>
-				<MenuItem style={{justifyContent: "center", backgroundColor: 'transparent'}} disableRipple={true}>
-					<ListItemText style={{textAlign: "center"}}>
-						<Typography variant="h6" style={{ color: '#ff6f00' }}>Room Settings</Typography>
-					
-					</ListItemText>
-				</MenuItem>
-					
+                <MenuItem
+                  style={{
+                    justifyContent: "center",
+                    backgroundColor: "transparent",
+                  }}
+                  disableRipple={true}
+                >
+                  <ListItemText style={{ textAlign: "center" }}>
+                    <Typography variant="h6" style={{ color: "#ff6f00" }}>
+                      Room Settings
+                    </Typography>
+                  </ListItemText>
+                </MenuItem>
+
                 <MenuItem
                   onClick={() => {
-                    toggleLockMovement();
+                    toggleLock(setOptions, options);
                   }}
                 >
                   <ListItemIcon>
@@ -454,11 +442,15 @@ const FabricRoom = () => {
                       : "Unlock"}
                   </ListItemText>
                   <Typography variant="body2" color="text.secondary">
-                    L
+                    ctrl+L
                   </Typography>
                 </MenuItem>
 
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    Copy();
+                  }}
+                >
                   <ListItemIcon>
                     <ContentCopy fontSize="small" />
                   </ListItemIcon>
@@ -481,29 +473,50 @@ const FabricRoom = () => {
                   </Typography>
                 </MenuItem>
                 <Divider />
-                <MenuItem style={{justifyContent: "center", backgroundColor: 'transparent'}} disableRipple={true}>
-                  <ListItemText style={{textAlign: "center"}}>
-						<Typography variant="h6" style={{ color: 'gray' }}>Layers</Typography>
-					
-					</ListItemText>
-                </MenuItem>
-				
-                <MenuItem style={{justifyContent: "center", backgroundColor: 'transparent'}} disableRipple={true} >
-					<ButtonGroup variant="contained" size="large" className="btngrp" color="primary" style={{display:'contents',
-  					justifyContent: "center"}} >
-						<Tooltip title="Send Object Backwards" placement="bottom">
-							<Button variant="outlined" onClick={sendBw}>
-								<KeyboardArrowDownIcon fontSize="small" />
-							</Button >
-						</Tooltip>
-						<Tooltip title="Bring Object Forwards" placement="bottom">
-							<Button variant="outlined" color="success" onClick={bringFw}>
-								<KeyboardArrowUpIcon fontSize="small" />
-							</Button>
-						</Tooltip>
-					</ButtonGroup>
+                <MenuItem
+                  style={{
+                    justifyContent: "center",
+                    backgroundColor: "transparent",
+                  }}
+                  disableRipple={true}
+                >
+                  <ListItemText style={{ textAlign: "center" }}>
+                    <Typography variant="h6" style={{ color: "gray" }}>
+                      Layers
+                    </Typography>
+                  </ListItemText>
                 </MenuItem>
 
+                <MenuItem
+                  style={{
+                    justifyContent: "center",
+                    backgroundColor: "transparent",
+                  }}
+                  disableRipple={true}
+                >
+                  <ButtonGroup
+                    variant="contained"
+                    size="large"
+                    className="btngrp"
+                    color="primary"
+                    style={{ display: "contents", justifyContent: "center" }}
+                  >
+                    <Tooltip title="Send Object Backwards" placement="bottom">
+                      <Button variant="outlined" onClick={sendBw}>
+                        <KeyboardArrowDownIcon fontSize="small" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Bring Object Forwards" placement="bottom">
+                      <Button
+                        variant="outlined"
+                        color="success"
+                        onClick={bringFw}
+                      >
+                        <KeyboardArrowUpIcon fontSize="small" />
+                      </Button>
+                    </Tooltip>
+                  </ButtonGroup>
+                </MenuItem>
               </MenuList>
             </Paper>
           </Popper>

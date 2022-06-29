@@ -27,19 +27,24 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Divider from "@mui/material/Divider";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 
-
 const FabricAsset = () => {
-  const { canvas, activeObject, prevGrid, layerLevel, removeObjects } = useContext(
-    FabricContext
-  );
+  const {
+    canvas,
+    activeObject,
+    prevGrid,
+    layerLevel,
+    removeObjects,
+    toggleLock,
+    Copy,
+  } = useContext(FabricContext);
   const [showTools, setShowTools] = useState(false);
   const [options, setOptions] = useState({
     selectable: true,
@@ -93,32 +98,6 @@ const FabricAsset = () => {
     if (l > linelayer + 1) activeObject.sendBackwards();
   };
 
-  const toggleLockMovement = (e) => {
-    setOptions({
-      ...options,
-    });
-    setActiveStyle(
-      "selectable",
-      !getActiveStyle("selectable", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "hasControls",
-      !getActiveStyle("hasControls", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "lockMovementX",
-      !getActiveStyle("lockMovementX", activeObject),
-      activeObject
-    );
-    setActiveStyle(
-      "lockMovementY",
-      !getActiveStyle("lockMovementY", activeObject),
-      activeObject
-    );
-  };
-
   // let lock = false;
   // const addAsset = (e) => {
   //     canvas.on('mouse:up', function(opt) {
@@ -169,7 +148,7 @@ const FabricAsset = () => {
       <div>
         {anchorEl && showTools && (
           <Popper id={"simple-popper"} anchorEl={anchorEl} open={true}>
-            <Paper sx={{ width: 180, maxWidth: "100%" }}>
+            <Paper sx={{ width: 180, maxWidth: "100%", backgroundColor: 'rgba(255,255,255,0.85)', }}>
               <MenuList>
                 <MenuItem
                   style={{
@@ -186,7 +165,7 @@ const FabricAsset = () => {
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    toggleLockMovement();
+                    toggleLock(setOptions, options);
                   }}
                 >
                   <ListItemIcon>
@@ -202,10 +181,14 @@ const FabricAsset = () => {
                       : "Unlock"}
                   </ListItemText>
                   <Typography variant="body2" color="text.secondary">
-                    L
+                    ctrl+L
                   </Typography>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    Copy();
+                  }}
+                >
                   <ListItemIcon>
                     <ContentCopy fontSize="small" />
                   </ListItemIcon>
