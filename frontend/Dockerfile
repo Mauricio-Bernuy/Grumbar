@@ -1,5 +1,5 @@
 #use a lighter version of Node as a parent image
-FROM node:14.16.0-alpine3.10
+FROM node:16.15-alpine
 # Set the working directory to /client
 WORKDIR /usr/src/app
 # copy package.json into the container at /client
