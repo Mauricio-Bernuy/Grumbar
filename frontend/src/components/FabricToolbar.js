@@ -181,7 +181,7 @@ const FabricToolbar = (props) => {
 
         <FabricExportLoad/>
 
-
+        <FabricImage/>
 
         </List>
         <FabricGrid />

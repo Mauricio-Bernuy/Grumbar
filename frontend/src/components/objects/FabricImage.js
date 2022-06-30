@@ -24,6 +24,10 @@ const FabricImage = () => {
   const onImageUpload = e => {
     const formData = new FormData();
     formData.append('asset', selectedFile);
+    formData.append('userId', "userexampol");
+    formData.append('title', "taitelexampol");
+    formData.append('category', "categoriexampol");
+
     fetch('http://localhost:9000/api/images/upload', {
       method: 'POST',
       body: formData
