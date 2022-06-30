@@ -1,0 +1,50 @@
+import React, {
+    useContext, 
+}                        from "react"
+import { fabric }        from "fabric"
+import { FabricContext }          from "../../context/FabricContext"
+import testasset from '../../TC_Dungeon Delvers Asset Pack_TreasureChest02.png';
+
+
+// const supportedImageTypes = ["image/png", "image/apng", "image/bmp", "image/gif", "image/x-icon", "image/jpeg"]
+
+const FabricAsset = () => {
+    const { canvas } = useContext(FabricContext)
+
+    // const addTextBox = (e) => {
+    //     document.getElementById("fabric-asset-upload").click()
+    // }
+  function sex(opt){
+	      let listener = canvas.__eventListeners;
+	      console.log("sex: ", listener);
+  }
+    const addAsset = (e) => {
+	  //  canvas.on('mouse:up', function(opt) {
+      //    const file = testasset;
+      //    fabric.Image.fromURL(file, function(img) {
+      //        img.scaleToWidth(100);
+      //        img.snapAngle=15
+	  //      //img.top = (opt.e.clientY - fabric.util.invertTransform(canvas.viewportTransform)[5]) * canvas.getZoom();
+	  //      //img.left = (opt.e.clientX - fabric.util.invertTransform(canvas.viewportTransform)[4]) * canvas.getZoom();
+	  //    	img.top = opt.e.layerY;
+	  //    	img.left = opt.e.layerX;
+      //        canvas.add(img);
+      //    });
+	  //    let listener = canvas.__eventListeners;
+	  //    console.log("sex: ", listener);
+	  //    canvas.off('mouse:up');
+
+	  //  })
+	  canvas.on('mouse:up', sex(opt));
+    };
+
+    return (
+        <>
+            <button onClick={addAsset}>Add Asset</button>
+            {/* <input type="file" id="fabric-asset" accept="image/*" onChange={onImageUpload}
+                   style={{ display: "none" }}/> */}
+        </>
+    )
+}
+
+export default FabricAsset
