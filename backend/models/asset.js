@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 
 var assetSchema = new mongoose.schema({
-  url: string,
-  title: string,
-  category: string,
+  url: String,
+  title: String,
+  category: String,
   //img: {
   //  data: buffer,
   //  contenttype: string,

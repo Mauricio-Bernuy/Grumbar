@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
 
-var userAssetSchema = new mongoose.schema({
-  url: string,
-  title: string,
-  category: string,
-  userId: string,
+var userAssetSchema = mongoose.Schema({
+  url: String,
+  title: String,
+  category: String,
+  userId: String,
 });
 
 //image is a model which has a schema imageschema
 
-module.exports = new mongoose.model('image', userAssetSchema);
+module.exports = new mongoose.model('userAsset', userAssetSchema);

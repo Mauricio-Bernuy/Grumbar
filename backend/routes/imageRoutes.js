@@ -27,7 +27,7 @@ router.post('/upload', upload.single('asset'), (req, res, next) => {
 
   console.log(req.body);
   console.log(obj);
-  imageModel.create(obj, (err, item) => {
+  userAssetModel.create(obj, (err, item) => {
     if (err) {
       console.log(err);
     } else {
@@ -38,12 +38,15 @@ router.post('/upload', upload.single('asset'), (req, res, next) => {
 });
 
 router.get('/', async (req, res) => {
-  const images = await imageModel.find({}, { url: 1, _id: 0 });
+  const images = await userAssetModel.find(
+    {},
+    { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
+  );
   return res.json(images);
 });
 
 router.get('/api/images/:id', async (req, res) => {
-  const image = await imageModel.find('_id', req.params.id);
+  const image = await userAssetModel.find('_id', req.params.id);
   return res.json(image);
 });
 

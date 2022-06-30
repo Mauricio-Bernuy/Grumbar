@@ -1,22 +1,21 @@
-import React, { useEffect } from "react";
-import FabricCanvas from "./components/FabricCanvas";
-import FabricToolbar from "./components/FabricToolbar";
-import { FabricContextProvider } from "./context/FabricContext";
-import { NavBar } from "./components/NavBar";
-import { NavItem } from "./components/NavItem";
-import { DropdownMenu } from "./components/DropdownMenu";
-import { LoginButton } from "./components/Login";
-import { ReactComponent as ProfileIcon } from "./profileicon.svg";
-import { useAuth0 } from "@auth0/auth0-react";
-import { FpsView } from "react-fps";
+import React, { useEffect } from 'react';
+import FabricCanvas from './components/FabricCanvas';
+import FabricToolbar from './components/FabricToolbar';
+import { FabricContextProvider } from './context/FabricContext';
+import { NavBar } from './components/NavBar';
+import { NavItem } from './components/NavItem';
+import { DropdownMenu } from './components/DropdownMenu';
+import { LoginButton } from './components/Login';
+import { ReactComponent as ProfileIcon } from './profileicon.svg';
+import { useAuth0 } from '@auth0/auth0-react';
+import { FpsView } from 'react-fps';
 
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-import { Fade } from "@mui/material";
-import { TransitionGroup } from "react-transition-group";
-
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import { Fade } from '@mui/material';
+import { TransitionGroup } from 'react-transition-group';
 
 // class App extends Component {
 //   constructor(props) {
@@ -29,10 +28,10 @@ import { TransitionGroup } from "react-transition-group";
 // 	  .then(res => res.text())
 // 	  .then(res => this.setState({ apiResponse: res }));
 //   }
-//   callDB() {    
+//   callDB() {
 // 	fetch("http://localhost:9000/testDB")
 // 	  .then(res => res.text())
-// 	  .then(res => this.setState({ dbResponse: res }))        
+// 	  .then(res => this.setState({ dbResponse: res }))
 // 	  .catch(err => err);
 //   }
 
@@ -66,13 +65,13 @@ function App() {
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
   }, []);
 
   return (
     <>
-      <div style={{ padding: "0px 0px", height: "100vh" }}>
-        {/* <LoginButton /> */}
+      <div style={{ padding: '0px 0px', height: '100vh' }}>
+        {/* <LoginButton />*/}
         {isAuthenticated ? (
           <>
             <NavBar>
@@ -81,7 +80,7 @@ function App() {
               </NavItem>
             </NavBar>
             <FabricContextProvider>
-              <div style={{ display: "flex", alignItems: "stretch" }}>
+              <div style={{ display: 'flex', alignItems: 'stretch' }}>
                 <div>
                   <FabricToolbar />
 
@@ -94,10 +93,10 @@ function App() {
                 </div>
                 <Fade
                   in={true}
-                  style={{ transitionDelay: "500ms" }}
+                  style={{ transitionDelay: '500ms' }}
                   timeout={1000}
                 >
-                  <div style={{ flex: "1" }}>
+                  <div style={{ flex: '1' }}>
                     <FabricCanvas />
                   </div>
                 </Fade>
