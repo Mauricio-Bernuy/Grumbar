@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/', indexRouter);
-app.use('/testAPI', testAPIRouter);
+//app.use('/testAPI', testAPIRouter);
 app.use('/testDB', testDBRouter);
 app.use('/api/images', imageRouter);
 
