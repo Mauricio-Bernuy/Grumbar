@@ -1,13 +1,15 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const userSchema = new Schema(
-  {
-    _id: mongoose.Schema.Types.ObjectId,
-    profileImg: {
-      type: String,
-    },
-  },
-  {
-    collection: '',
-  }
-);
+var mongoose = require('mongoose');
+
+var assetSchema = new mongoose.schema({
+  url: string,
+  title: string,
+  category: string,
+  //img: {
+  //  data: buffer,
+  //  contenttype: string,
+  //},
+});
+
+//image is a model which has a schema imageschema
+
+module.exports = new mongoose.model('image', assetSchema);

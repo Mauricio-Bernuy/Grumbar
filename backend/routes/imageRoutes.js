@@ -1,4 +1,4 @@
-var imageModel = require('../models.js');
+var userAssetModel = require('../models/userAsset.js');
 const multer = require('multer');
 const express = require('express');
 const router = express.Router();
@@ -17,27 +17,15 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.post('/upload', upload.single('asset'), (req, res, next) => {
-  var img = fs.readFileSync(req.file.path);
-  var encode_image = img.toString('base64');
-  // Define a JSONobject for the image attributes for saving to database
-
-  var finalImg = {
-    contentType: req.file.mimetype,
-    image: Buffer.from(encode_image, 'base64'),
-  };
-
+  //en caso no funque, checkear how to upload with multer
   var obj = {
-    name: 'asset_generic_name',
-    desc: 'asset_desc',
     url: '/uploads/' + req.file.filename,
-    img: {
-      data: fs.readFileSync(
-        path.join(__dirname + '/../uploads/' + req.file.filename)
-      ),
-      contentType: 'image/png',
-    },
+    title: req.body.title,
+    category: req.body.category,
+    userId: req.body.userId,
   };
 
+  console.log(req.body);
   console.log(obj);
   imageModel.create(obj, (err, item) => {
     if (err) {
