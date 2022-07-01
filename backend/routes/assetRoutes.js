@@ -10,7 +10,7 @@ var path = require('path');
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     fs.mkdirSync(path, { recursive: true });
-    cb(null, 'assets');
+    cb(null, 'files/assets');
   },
   filename: (req, file, cb) => {
     cb(
@@ -42,13 +42,13 @@ router.get('/user', async (req, res) => {
 
 router.post('/dev/upload', upload.single('asset'), (req, res, next) => {
   var obj = {
-    url: '/assets/' + req.file.filename,
+    url: '/files/assets/' + req.file.filename,
     title: req.body.title,
     category: req.body.category,
   };
 
   console.log(obj);
-  userAssetModel.create(obj, (err, item) => {
+  assetModel.create(obj, (err, item) => {
     if (err) {
       console.log(err);
       res.json({ message: 'Upload Failed' });
@@ -62,7 +62,7 @@ router.post('/dev/upload', upload.single('asset'), (req, res, next) => {
 
 router.post('/user/upload', upload.single('asset'), (req, res, next) => {
   var obj = {
-    url: '/assets/' + req.file.filename,
+    url: '/files/assets/' + req.file.filename,
     //url: req.protocol + '://' + req.get('host') + '/api/assets/' + req.file.filename,
     title: req.body.title,
     category: req.body.category,
@@ -113,7 +113,7 @@ router.get('/:mongoId', async (req, res) => {
 });
 
 //find all assets from an especific user
-router.get('user/:mongoId', async (req, res) => {
+router.get('/user/:mongoId', async (req, res) => {
   var id = req.param('mongoId');
   const userAssets = await userAssetModel.find({ userId: id });
   return res.json(userAsset);
