@@ -26,11 +26,11 @@ app.use('/api/assets', assetRouter);
 // app.use('/api/users', userRouter);
 
 app.use(express.static('public'));
-app.use('/api/assets', express.static('./assets')); // this the one
+app.use('/api/assets', express.static('./files/assets')); // this the one
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/assets', express.static(path.join(__dirname, '../assets')));
+app.use('/files/assets', express.static(path.join(__dirname, '../files/assets')));
 
 app.listen(app.get('port'));
 console.log('Server on port: ', app.get('port'));
