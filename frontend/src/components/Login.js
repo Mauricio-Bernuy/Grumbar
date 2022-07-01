@@ -11,7 +11,7 @@ import Background from '../assets/MountainsBG.webp';
 import FabricImage from './objects/FabricImage';
 
 export const LoginButton = () => {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const {isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
 
   // initialize timeLeft with the seconds prop
   const [timeLeft, setTimeLeft] = useState(5);
@@ -66,7 +66,7 @@ export const LoginButton = () => {
               </Typography>
               <br />
 
-              {timeLeft > 0 || isAuthenticated ? (
+              {timeLeft > 0 || isAuthenticated ? ( 
                 <AnimatedIcon fill={'darkgreen'} />
               ) : (
                 <Grow in={true} timeout={400}>

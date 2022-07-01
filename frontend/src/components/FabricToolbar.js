@@ -35,7 +35,6 @@ import FabricGrid from "./objects/FabricGrid";
 
 // export default FabricToolbar
 
-
 import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -54,9 +53,10 @@ import TextFieldsIcon from "@mui/icons-material/TextFields";
 import ChairIcon from "@mui/icons-material/Chair";
 import PolylineIcon from "@mui/icons-material/Polyline";
 import Switch from "@mui/material/Switch";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
 import TitlebarImageList from "./assetGallery";
+import { Stack } from "@mui/material";
 
 const FabricToolbar = (props) => {
   const [open, setOpen] = React.useState(true);
@@ -64,11 +64,14 @@ const FabricToolbar = (props) => {
   const [assetOpen, setAssetOpen] = React.useState(false);
 
   const toggleDrawer = (value) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
       // console.log("owo")
       return;
     }
-  
+
     setAssetOpen(value);
   };
 
@@ -113,8 +116,6 @@ const FabricToolbar = (props) => {
     }),
   }));
 
-
-  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const roomButtonRef = React.useRef();
   function handleClick() {
@@ -131,10 +132,9 @@ const FabricToolbar = (props) => {
 
   return (
     <>
+      {/* toolbar drawer */}
 
-        {/* toolbar drawer */}
-
-      <Drawer variant="permanent" open={false} >
+      <Drawer variant="permanent" open={false}>
         <List
           sx={{
             width: "100%",
@@ -143,13 +143,12 @@ const FabricToolbar = (props) => {
           }}
           component="nav"
           aria-labelledby="nested-list-subheader"
-          
         >
           <ListSubheader component="div" id="nested-list-subheader">
             Tools
           </ListSubheader>
-        
-        {/* Asset Tool*/}
+
+          {/* Asset Tool*/}
           <HtmlTooltip
             title={
               <React.Fragment>
@@ -166,68 +165,71 @@ const FabricToolbar = (props) => {
             </ListItemButton>
           </HtmlTooltip>
 
-          <FabricAsset/>
-        
-        {/* Room Tool  */}
-            
-        <FabricRoom/>
+          <FabricAsset />
 
+          {/* Room Tool  */}
 
-        {/* tool 3  */}
+          <FabricRoom />
 
-        <FabricTextBox/>
-         
-        <Divider/>
+          {/* tool 3  */}
 
-        <FabricExportLoad/>
+          <FabricTextBox />
 
-        <FabricImage/>
+          <Divider />
 
+          <FabricExportLoad />
+
+          {/* <FabricImage /> */}
         </List>
         <FabricGrid />
       </Drawer>
-      
+
       {/* asset drawer */}
 
-      <MuiDrawer variant="temporary" open={assetOpen} 
+      <MuiDrawer
+        variant="temporary"
+        open={assetOpen}
         onClose={toggleDrawer(false)}
         BackdropProps={{ invisible: true }}
-        >
-
-        <Box
-        sx={{ width: 'auto'}}
-        role="presentation"
-        // onClick={toggleDrawer( false)}
-        onKeyDown={toggleDrawer( false)}
       >
-        <List
-          sx={{ width: 360, maxWidth: 360, bgcolor: "background.paper" }}
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              Asset Selection
-              <IconButton 
-                onClick={
-                  toggleDrawer(false)
-                }
-              >
-                {theme.direction === "rtl" ? (
-                  <ChevronRightIcon />
-                ) : (
-                  <ChevronLeftIcon />
-                )}
-              </IconButton>
-            </ListSubheader>
-          }
+        <Box
+          sx={{ width: "auto" }}
+          role="presentation"
+          // onClick={toggleDrawer( false)}
+          onKeyDown={toggleDrawer(false)}
         >
-          <TitlebarImageList name="Category 1" setAssetOpen={setAssetOpen} />
-          <TitlebarImageList name="Category 2" setAssetOpen={setAssetOpen} />
-          <TitlebarImageList name="Category 3" setAssetOpen={setAssetOpen} />
-        </List>
+          <List
+            sx={{ width: 360, maxWidth: 360, bgcolor: "background.paper" }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+            subheader={
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={0}
+                >
+              <ListSubheader component="div" id="nested-list-subheader">
+                Asset Selection
+                  <IconButton onClick={toggleDrawer(false)}>
+                    {theme.direction === "rtl" ? (
+                      <ChevronRightIcon />
+                    ) : (
+                      <ChevronLeftIcon />
+                    )}
+                  </IconButton>
+
+              </ListSubheader>
+                  <FabricImage/>
+                </Stack>
+            }
+          >
+            <TitlebarImageList type="userAssets" setAssetOpen={setAssetOpen} />
+            <TitlebarImageList name="Category 2" setAssetOpen={setAssetOpen} />
+            <TitlebarImageList name="Category 3" setAssetOpen={setAssetOpen} />
+          </List>
         </Box>
       </MuiDrawer>
-
     </>
   );
 };

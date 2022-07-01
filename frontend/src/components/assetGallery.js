@@ -14,10 +14,18 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import { fabric } from 'fabric';
 import { FabricContext } from '../context/FabricContext';
+import { useAuth0 } from '@auth0/auth0-react';
 
+
+// let fetchData = []
 export default function TitlebarImageList(props) {
+  const { user, isLoading, isAuthenticated } = useAuth0();
+
   const [open, setOpen] = React.useState(false);
+  const [fetchData, setFetchData] = React.useState([]);
+
   const handleClick = () => {
+    // console.log(fetchData)
     setOpen(!open);
   };
 
@@ -27,10 +35,70 @@ export default function TitlebarImageList(props) {
     FabricContext
   );
 
+  useEffect(() => {
+    if (isAuthenticated){
+
+      if (props.type==="userAssets"){
+        // const userC =  user.email
+        // console.log(userC)
+        const formData = new FormData();
+        formData.append('userId', user.email);
+        console.log(formData)
+        
+        fetch('http://localhost:9000/api/assets/personal', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(json => setFetchData(json))  
+          .then(result => {
+            console.log(result);
+          })
+          .catch(error => {
+            // console.log(error)
+            console.error(error);
+          });
+
+        // const formData = new FormData();
+        // // // formData.append('userId', user.email);
+        // formData.append('userId', 'test');
+
+        // console.log(formData)
+
+        // fetch('http://localhost:9000/api/assets/personal',{
+        //   method:'POST',
+        //   body: formData
+        // })
+        // .then(response => response.json())
+        // .then(json => setFetchData(json))  
+        // .then(result => {
+        //   console.log(result);
+        // })
+        // .catch(error => {
+        //   // console.log(error)
+        //   console.error(error);
+        // })
+          
+
+        // .then((response) => response.json())
+        // .then(result => fetchData = result)
+        
+
+        // console.log(fetchData)
+      }
+      else{
+        fetch('http://localhost:9000/api/assets')
+        .then((response) => response.json())
+        .then(json => setFetchData(json))
+      }
+    }
+    // console.log(fetchData)
+  }, []);
+
   let lock = false;
   const addAsset = e => {
     canvas.on('mouse:up', function(opt) {
-      const file = e.img;
+      const file = e.url;
       fabric.Image.fromURL(file, function(img) {
         img.scaleToWidth(100);
         img.snapAngle = 15;
@@ -50,6 +118,7 @@ export default function TitlebarImageList(props) {
   };
 
   const clickOnce = e => {
+    console.log(e)
     if (lock === false) {
       addAsset(e);
       lock = true;
@@ -68,17 +137,17 @@ export default function TitlebarImageList(props) {
 
       <Collapse in={open}>
         <ImageList>
-          {assetData.map(item => (
-            <ImageListItem key={item.img}>
+          {fetchData.map(item => (
+            <ImageListItem key={item.url}>
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.url}?w=248&fit=crop&auto=format`}
+                srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
                 alt={item.title}
                 loading='lazy'
               />
               <ImageListItemBar
                 title={item.title}
-                subtitle={item.Category}
+                subtitle={item.category}
                 actionIcon={
                   <IconButton
                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
@@ -100,6 +169,8 @@ export default function TitlebarImageList(props) {
     </>
   );
 }
+
+
 
 const assetData = [
   {
