@@ -62,7 +62,7 @@ import { TransitionGroup } from 'react-transition-group';
 // }
 
 function App() {
-  const { user, isAuthenticated } = useAuth0();
+  const {isAuthenticated } = useAuth0();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';

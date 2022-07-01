@@ -10,7 +10,7 @@ services:
     networks:
       - app-network
     volumes:
-      - ./frontend:/frontend
+      - ./frontend:/frontend/:cached
     depends_on:
       - backend
     working_dir: /frontend
