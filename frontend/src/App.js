@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useState } from "react";
 import FabricCanvas from "./components/FabricCanvas";
 import FabricToolbar from "./components/FabricToolbar";
 import { FabricContextProvider } from "./context/FabricContext";
@@ -9,6 +10,11 @@ import { LoginButton } from "./components/Login";
 import { ReactComponent as ProfileIcon } from "./profileicon.svg";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FpsView } from "react-fps";
+import { MapCardGrid } from "./components/MapCardGrid"
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -18,11 +24,20 @@ import { Fade } from "@mui/material";
 import { TransitionGroup } from "react-transition-group";
 
 function App() {
+
+  const [isEditing, setEditing] = useState(false);
+
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
   }, []);
+
+  const openEditor = () => {
+    let edit = true
+    setEditing(edit)
+    console.log("XD")
+  }
 
   return (
     <>
@@ -35,29 +50,42 @@ function App() {
                 <DropdownMenu />
               </NavItem>
             </NavBar>
-            <FabricContextProvider>
-              <div style={{ display: "flex", alignItems: "stretch" }}>
-                <div>
-                  <FabricToolbar />
+            {isEditing ? (
+              <FabricContextProvider>
+                <div style={{ display: "flex", alignItems: "stretch" }}>
+                  <div>
+                    <FabricToolbar />
 
-                  <FpsView
-                    width={100}
-                    height={20}
-                    top={window.innerHeight - 50}
-                    left={0}
-                  />
-                </div>
-                <Fade
-                  in={true}
-                  style={{ transitionDelay: "500ms" }}
-                  timeout={1000}
-                >
-                  <div style={{ flex: "1" }}>
-                    <FabricCanvas />
+                    <FpsView
+                      width={100}
+                      height={20}
+                      top={window.innerHeight - 50}
+                      left={0}
+                    />
                   </div>
-                </Fade>
-              </div>
-            </FabricContextProvider>
+                  <Fade
+                    in={true}
+                    style={{ transitionDelay: "500ms" }}
+                    timeout={1000}
+                  >
+                    <div style={{ flex: "1" }}>
+                      <FabricCanvas />
+                    </div>
+                  </Fade>
+                </div>
+              </FabricContextProvider>
+            ) : (
+              <>
+                <Typography variant="h1" color="#FFFFFF" align="center" fontFamily={"Helvetica Neue"}>
+                      {user.name}'s Maps
+                </Typography>
+                <hr></hr>
+                <Box ml={15} mt={2} mb={2}>
+                    <Button size="large" variant="outlined" onClick={() => openEditor()}>Create New Map</Button>
+                </Box>
+                <MapCardGrid></MapCardGrid>
+              </>
+            )}
           </>
         ) : (
           <>

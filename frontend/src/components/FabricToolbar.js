@@ -55,6 +55,7 @@ import ChairIcon from "@mui/icons-material/Chair";
 import PolylineIcon from "@mui/icons-material/Polyline";
 import Switch from "@mui/material/Switch";
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 import TitlebarImageList from "./assetGallery";
 
@@ -176,15 +177,14 @@ const FabricToolbar = (props) => {
         {/* tool 3  */}
 
         <FabricTextBox/>
-         
-        <Divider/>
-
+          
+        <Divider></Divider>
+        
         <FabricExportLoad/>
-
-
 
         </List>
         <FabricGrid />
+        
       </Drawer>
       
       {/* asset drawer */}
@@ -227,7 +227,6 @@ const FabricToolbar = (props) => {
         </List>
         </Box>
       </MuiDrawer>
-
     </>
   );
 };
