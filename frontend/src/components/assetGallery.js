@@ -14,13 +14,18 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import { fabric } from 'fabric';
 import { FabricContext } from '../context/FabricContext';
+import { useAuth0 } from '@auth0/auth0-react';
 
-let fetchData = []
 
+// let fetchData = []
 export default function TitlebarImageList(props) {
+  const { user, isLoading, isAuthenticated } = useAuth0();
+
   const [open, setOpen] = React.useState(false);
+  const [fetchData, setFetchData] = React.useState([]);
+
   const handleClick = () => {
-    console.log(fetchData)
+    // console.log(fetchData)
     setOpen(!open);
   };
 
@@ -30,12 +35,65 @@ export default function TitlebarImageList(props) {
     FabricContext
   );
 
-
   useEffect(() => {
-    fetch('http://localhost:9000/api/images')
-     .then((response) => response.json())
-     .then(json => fetchData = json)
-   }, []);
+    if (isAuthenticated){
+
+      if (props.type==="userAssets"){
+        // const userC =  user.email
+        // console.log(userC)
+        const formData = new FormData();
+        formData.append('userId', user.email);
+        console.log(formData)
+        
+        fetch('http://localhost:9000/api/assets/personal', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(json => setFetchData(json))  
+          .then(result => {
+            console.log(result);
+          })
+          .catch(error => {
+            // console.log(error)
+            console.error(error);
+          });
+
+        // const formData = new FormData();
+        // // // formData.append('userId', user.email);
+        // formData.append('userId', 'test');
+
+        // console.log(formData)
+
+        // fetch('http://localhost:9000/api/assets/personal',{
+        //   method:'POST',
+        //   body: formData
+        // })
+        // .then(response => response.json())
+        // .then(json => setFetchData(json))  
+        // .then(result => {
+        //   console.log(result);
+        // })
+        // .catch(error => {
+        //   // console.log(error)
+        //   console.error(error);
+        // })
+          
+
+        // .then((response) => response.json())
+        // .then(result => fetchData = result)
+        
+
+        // console.log(fetchData)
+      }
+      else{
+        fetch('http://localhost:9000/api/assets')
+        .then((response) => response.json())
+        .then(json => setFetchData(json))
+      }
+    }
+    // console.log(fetchData)
+  }, []);
 
   let lock = false;
   const addAsset = e => {

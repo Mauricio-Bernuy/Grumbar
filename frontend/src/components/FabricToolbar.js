@@ -56,6 +56,7 @@ import Switch from "@mui/material/Switch";
 import Box from "@mui/material/Box";
 
 import TitlebarImageList from "./assetGallery";
+import { Stack } from "@mui/material";
 
 const FabricToolbar = (props) => {
   const [open, setOpen] = React.useState(true);
@@ -178,7 +179,7 @@ const FabricToolbar = (props) => {
 
           <FabricExportLoad />
 
-          <FabricImage />
+          {/* <FabricImage /> */}
         </List>
         <FabricGrid />
       </Drawer>
@@ -202,16 +203,25 @@ const FabricToolbar = (props) => {
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={0}
+                >
               <ListSubheader component="div" id="nested-list-subheader">
                 Asset Selection
-                <IconButton onClick={toggleDrawer(false)}>
-                  {theme.direction === "rtl" ? (
-                    <ChevronRightIcon />
-                  ) : (
-                    <ChevronLeftIcon />
-                  )}
-                </IconButton>
+                  <IconButton onClick={toggleDrawer(false)}>
+                    {theme.direction === "rtl" ? (
+                      <ChevronRightIcon />
+                    ) : (
+                      <ChevronLeftIcon />
+                    )}
+                  </IconButton>
+
               </ListSubheader>
+                  <FabricImage/>
+                </Stack>
             }
           >
             <TitlebarImageList type="userAssets" setAssetOpen={setAssetOpen} />

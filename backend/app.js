@@ -7,7 +7,7 @@ var indexRouter = require('./routes/index');
 var testAPIRouter = require('./routes/testAPI');
 var testDBRouter = require('./routes/testDB');
 var assetRouter = require('./routes/assetRoutes');
-var userRouter = require('./routes/userRoutes');
+// var userRouter = require('./routes/userRoutes');
 
 var config = require('./config');
 
@@ -23,7 +23,7 @@ app.use('/', indexRouter);
 //app.use('/testAPI', testAPIRouter);
 app.use('/api/testDB', testDBRouter);
 app.use('/api/assets', assetRouter);
-app.use('/api/users', userRouter);
+// app.use('/api/users', userRouter);
 
 app.use(express.static('public'));
 app.use('/api/assets', express.static('./uploads')); // this the one

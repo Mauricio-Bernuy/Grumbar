@@ -30,7 +30,7 @@ router.post('/upload', upload.single('asset'), (req, res, next) => {
   };
 
   // console.log(req.body);
-  // console.log(obj);
+  console.log(obj);
   userAssetModel.create(obj, (err, item) => {
     if (err) {
       console.log(err);
@@ -67,6 +67,8 @@ router.post('/devupload', upload.single('asset'), (req, res, next) => {
 
 router.get('/clear', async (req, res) => {
   await userAssetModel.deleteMany({})
+  await assetModel.deleteMany({})
+
   const path = 'uploads'
   fs.rmdirSync(path, { recursive: true })
 
@@ -74,25 +76,24 @@ router.get('/clear', async (req, res) => {
   return res.json("DONE!");
 });
 
-
 router.get('/', async (req, res) => {
-  const images = await userAssetModel.find(
+  const images = await assetModel.find(
     {},
     { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
   );
   return res.json(images);
 });
 
-
-
 // for userID 
-// router.get('/', async (req, res) => {
-//   const images = await userAssetModel.find(
-//     {},
-//     { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
-//   );
-//   return res.json(images);
-// });
+router.post('/personal', upload.single(''), async (req, res, next) => {
+  const userId = req.body.userId;
+  console.log(userId)
+  const images = await userAssetModel.find(
+    {userId: userId},
+    { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
+  );
+  return res.json(images);
+});
 
 
 router.get('/api/images/:id', async (req, res) => {
