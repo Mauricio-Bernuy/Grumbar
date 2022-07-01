@@ -53,7 +53,8 @@ import TextFieldsIcon from "@mui/icons-material/TextFields";
 import ChairIcon from "@mui/icons-material/Chair";
 import PolylineIcon from "@mui/icons-material/Polyline";
 import Switch from "@mui/material/Switch";
-import Box from "@mui/material/Box";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 import TitlebarImageList from "./assetGallery";
 import { Stack } from "@mui/material";
@@ -191,6 +192,7 @@ const FabricToolbar = (props) => {
           {/* <FabricImage /> */}
         </List>
         <FabricGrid />
+        
       </Drawer>
 
       {/* asset drawer */}

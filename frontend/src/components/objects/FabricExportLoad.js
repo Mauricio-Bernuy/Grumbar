@@ -189,6 +189,10 @@ const FabricExportLoad = () => {
     // link.click();
   };
 
+  const SaveMap = (e) => {
+    
+  };
+
   return (
     <>
       <Box
@@ -216,6 +220,9 @@ const FabricExportLoad = () => {
           </Button>
           <Button key="Export IMG File" onClick={ExportIMG}>
             IMG
+          </Button>
+          <Button key="Save Map File" onClick={SaveMap}>
+            Save
           </Button>
         </ButtonGroup>
 
