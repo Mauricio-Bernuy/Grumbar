@@ -16,8 +16,8 @@ import { Stack } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import IconButton from '@mui/material/IconButton';
-import PublishIcon from '@mui/icons-material/Publish';
+import IconButton from "@mui/material/IconButton";
+import PublishIcon from "@mui/icons-material/Publish";
 const supportedImageTypes = [
   "image/png",
   "image/apng",
@@ -27,7 +27,7 @@ const supportedImageTypes = [
   "image/jpeg",
 ];
 
-const FabricImage = () => {
+const FabricImage = (props) => {
   const { user, isAuthenticated } = useAuth0();
   const [open, setOpen] = React.useState(false);
 
@@ -49,30 +49,48 @@ const FabricImage = () => {
   const { canvas } = useContext(FabricContext);
 
   const onImageUpload = (e) => {
-    //check if file
-    console.log(user);
-    const formData = new FormData();
-    formData.append("asset", selectedFile);
-    // formData.append('userId', "mauricio.bernuy@utec.edu.pe");
-    // if (e.target.userId)
-    formData.append("userId", e.target.userId.value);
-    // else
-    //   formData.append('userId', user.email);
-    formData.append("title", e.target.title.value);
-    formData.append("category", e.target.category.value);
+    e.preventDefault();
+    if (props.userInput) {
+      const formData = new FormData();
+      formData.append("asset", selectedFile);
+      formData.append("userId", e.target.userId.value);
+      formData.append("title", e.target.title.value);
+      formData.append("category", e.target.category.value);
 
-    fetch("http://localhost:9000/api/assets/upload", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
+      fetch("http://localhost:9000/api/assets/upload", {
+        method: "POST",
+        body: formData,
       })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      props.triggerFetch();
+    } else {
+      const formData = new FormData();
+      formData.append("asset", selectedFile);
+      formData.append("title", e.target.title.value);
+      formData.append("category", e.target.category.value);
+
+      fetch("http://localhost:9000/api/assets/devupload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      props.triggerFetch();
+    }
     setOpen(false);
+    return false;
   };
 
   const theme = useTheme();
@@ -92,7 +110,7 @@ const FabricImage = () => {
   return (
     <>
       <div>
-        <HtmlTooltip 
+        <HtmlTooltip
           title={
             <React.Fragment>
               <Typography color="inherit">Upload Assets</Typography>
@@ -109,20 +127,19 @@ const FabricImage = () => {
           </IconButton>
         </HtmlTooltip>
 
-        {/* <Button size="small" variant="contained" endIcon={<UploadFileIcon />} onClick={handleClickOpen} >
-        Add Assets
-      </Button> */}
         <form onSubmit={onImageUpload}>
           <Dialog open={open} disablePortal>
-            <DialogTitle>Upload Assets</DialogTitle>
+            <DialogTitle>
+              {props.userInput ? "Upload Assets" : "DEV: ADD ASSET TO DB"}
+            </DialogTitle>
             <DialogContent>
-              <Stack direction="column" spacing={2}>
+              <Stack direction="column" spacing={2} justifyContent="flex-end">
+                <hr></hr>
                 <TextField
                   required
                   id="outlined-required"
                   label="Title"
                   name="title"
-                  onSubmit={onImageUpload}
                 />
                 <TextField
                   required
@@ -130,11 +147,19 @@ const FabricImage = () => {
                   label="Category"
                   name="category"
                 />
-                <TextField
-                  id="outlined"
-                  label="userId (optional)"
-                  name="userId"
-                />
+                {props.userInput ? (
+                  <>
+                    <TextField
+                      disabled
+                      id="outlined"
+                      label="userId (optional)"
+                      name="userId"
+                      defaultValue={user.email}
+                    />
+                  </>
+                ) : (
+                  <></>
+                )}
 
                 <Button
                   variant="contained"
@@ -161,16 +186,6 @@ const FabricImage = () => {
           </Dialog>
         </form>
       </div>
-
-      {/* <button onClick={onImageUpload}>Add Custom Asset</button>
-      <input
-        type='file'
-        name='asset'
-        id='fabric-image-upload'
-        accept='image/*'
-        onChange={changeHandler}
-        //style={{ display: 'none' }}
-      /> */}
     </>
   );
 };

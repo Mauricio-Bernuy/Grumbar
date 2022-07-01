@@ -20,17 +20,16 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+// * UPLOAD ASSETS
+// User uploading
 router.post('/upload', upload.single('asset'), (req, res, next) => {
-  //en caso no funque, checkear how to upload with multer
   var obj = {
-    url: req.protocol + '://' + req.get('host') + '/api/assets/' + req.file.filename,
+    url: req.file.filename,
     title: req.body.title,
     category: req.body.category,
     userId: req.body.userId,
   };
 
-  // console.log(req.body);
-  console.log(obj);
   userAssetModel.create(obj, (err, item) => {
     if (err) {
       console.log(err);
@@ -43,58 +42,122 @@ router.post('/upload', upload.single('asset'), (req, res, next) => {
   });
 });
 
+// Developer uploading
 router.post('/devupload', upload.single('asset'), (req, res, next) => {
-  //en caso no funque, checkear how to upload with multer
   var obj = {
-    url: '/uploads/' + req.file.filename,
+    url: req.file.filename,
     title: req.body.title,
     category: req.body.category,
   };
 
-  // console.log(req.body);
-  // console.log(obj);
-  userAssetModel.create(obj, (err, item) => {
+  assetModel.create(obj, (err, item) => {
     if (err) {
       console.log(err);
       res.json({ message: 'Upload Failed' });
     } else {
-      // item.save();
       res.json({ message: 'Upload Success' });
       console.log("Asset upload success");
     }
   });
 });
 
-router.get('/clear', async (req, res) => {
-  await userAssetModel.deleteMany({})
-  await assetModel.deleteMany({})
-
-  const path = 'uploads'
-  fs.rmdirSync(path, { recursive: true })
-
-  console.log("xd")
-  return res.json("DONE!");
-});
-
+// * GET JSON OBJECTS
+// All assets
 router.get('/', async (req, res) => {
   const images = await assetModel.find(
     {},
     { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
   );
+  for (var i = 0; i < images.length; i++) {
+    images[i].url = req.protocol + '://' + req.get('host') + '/api/assets/' + images[i].url;
+  }
   return res.json(images);
 });
 
-// for userID 
+// Common assets
+router.post('/common', upload.single(''), async (req, res, next) => {
+  const category = req.body.category;
+
+  console.log(category)
+  const images = await assetModel.find(
+    {category: category},
+    { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
+  );
+
+  for (var i = 0; i < images.length; i++) {
+    images[i].url = req.protocol + '://' + req.get('host') + '/api/assets/' + images[i].url;
+  }
+
+  return res.json(images);
+});
+
+// User assets
 router.post('/personal', upload.single(''), async (req, res, next) => {
   const userId = req.body.userId;
+
   console.log(userId)
   const images = await userAssetModel.find(
     {userId: userId},
     { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
   );
+  
+  for (var i = 0; i < images.length; i++) {
+    images[i].url = req.protocol + '://' + req.get('host') + '/api/assets/' + images[i].url;
+  }
   return res.json(images);
 });
 
+// * GET CATEGORIES
+// Common categories
+router.get('/categories', async (req, res) => {
+  const categories = await assetModel.distinct('category');
+  return res.json(categories);
+});
+
+// not really needed rn
+router.get('/personal/categories', async (req, res) => {
+  const categories = await userAssetModel.distinct('category');
+  return res.json(categories);
+});
+
+// * CLEARING DB AND UPLOADS
+// Common assets
+// TODO specific category
+router.get('/common/clear', async (req, res) => {
+  const images = await assetModel.find(
+    {},
+    { url: 1}
+  );
+  for (var i = 0; i < images.length; i++) {
+    const path = './uploads/' + images[i].url;
+    console.log(path)
+    if (fs.existsSync(path)) 
+      fs.unlinkSync(path, { recursive: true })
+  }
+  await assetModel.deleteMany({})
+
+  return res.json("cleared common assets!");
+});
+
+// User assets 
+// TODO select specific user
+router.get('/personal/clear', async (req, res) => {
+  const images = await userAssetModel.find(
+    {},
+    { url: 1}
+  );
+  for (var i = 0; i < images.length; i++) {
+    const path = './uploads/' + images[i].url;
+    console.log(path)
+    if (fs.existsSync(path)) 
+      fs.unlinkSync(path, { recursive: true })
+  }
+  await userAssetModel.deleteMany({})
+
+  return res.json("cleared user assets!");
+});
+
+// everything else
 
 router.get('/api/images/:id', async (req, res) => {
   const image = await userAssetModel.find('_id', req.params.id);

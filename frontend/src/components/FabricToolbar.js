@@ -68,11 +68,11 @@ const FabricToolbar = (props) => {
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
     ) {
-      // console.log("owo")
       return;
     }
 
     setAssetOpen(value);
+    triggerFetch();
   };
 
   const theme = useTheme();
@@ -118,17 +118,26 @@ const FabricToolbar = (props) => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const roomButtonRef = React.useRef();
-  function handleClick() {
-    setAnchorEl(roomButtonRef.current);
-  }
 
-  function handleClose() {
-    setAnchorEl(null);
-  }
 
   useEffect(() => {
     setAnchorEl(roomButtonRef.current);
   }, [roomButtonRef]);
+
+  const [fetchCategory, setFetchCategory] = React.useState([]);
+  const [fetchFlag, updateFetch] = React.useState(0);
+
+  useEffect(() => {
+    // get categories
+    fetch("http://localhost:9000/api/assets/categories")
+      .then((response) => response.json())
+      .then((json) => setFetchCategory(json));
+  }, [fetchFlag]);
+
+  function triggerFetch() {
+    // Set fetchFlag to indirectly trigger the useEffect above
+    updateFetch(Math.random());
+  }
 
   return (
     <>
@@ -190,27 +199,27 @@ const FabricToolbar = (props) => {
         variant="temporary"
         open={assetOpen}
         onClose={toggleDrawer(false)}
-        BackdropProps={{ invisible: true }}
+        // BackdropProps={{ invisible: true }}
       >
         <Box
           sx={{ width: "auto" }}
           role="presentation"
           // onClick={toggleDrawer( false)}
-          onKeyDown={toggleDrawer(false)}
+          // onKeyDown={toggleDrawer(false)}
         >
           <List
             sx={{ width: 360, maxWidth: 360, bgcolor: "background.paper" }}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  spacing={0}
-                >
-              <ListSubheader component="div" id="nested-list-subheader">
-                Asset Selection
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={0}
+              >
+                <ListSubheader component="div" id="nested-list-subheader">
+                  Asset Selection
                   <IconButton onClick={toggleDrawer(false)}>
                     {theme.direction === "rtl" ? (
                       <ChevronRightIcon />
@@ -218,15 +227,25 @@ const FabricToolbar = (props) => {
                       <ChevronLeftIcon />
                     )}
                   </IconButton>
-
-              </ListSubheader>
-                  <FabricImage/>
-                </Stack>
+                </ListSubheader>
+                <FabricImage userInput="true" triggerFetch={triggerFetch}/>
+              </Stack>
             }
           >
-            <TitlebarImageList type="userAssets" setAssetOpen={setAssetOpen} />
-            <TitlebarImageList name="Category 2" setAssetOpen={setAssetOpen} />
-            <TitlebarImageList name="Category 3" setAssetOpen={setAssetOpen} />
+            <TitlebarImageList
+              type="userAssets"
+              category="My Assets"
+              setAssetOpen={setAssetOpen}
+              fetchFlag={fetchFlag}
+            />
+
+            {fetchCategory.map((item) => (
+              <TitlebarImageList
+                category={item}
+                setAssetOpen={setAssetOpen}
+                fetchFlag={fetchFlag}
+              />
+            ))}
           </List>
         </Box>
       </MuiDrawer>
