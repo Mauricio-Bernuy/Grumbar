@@ -120,7 +120,7 @@ button{
 }
 
 .logout-button {
-  background-color: #696969; /* Green */
+  background-color: #696969; 
   border: none;
   color: white;
   padding: 15px 32px;
@@ -132,7 +132,10 @@ button{
   width: 100%;
 }
 
+
+.linkcolor {
+  color: black
+}
 /* .canvas {
   background-color:#333;
 } */
-

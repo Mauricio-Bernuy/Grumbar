@@ -6,7 +6,7 @@ export const Profile = () => {
     return (
         isAuthenticated && (
             <div className="contenedor-perfil">
-                <img className="img-profile" src={user.picture} alt={user.name}/> 
+                <img className="img-profile" src={user.picture}/> 
                 <p className="nombre-user">{user.name}</p>
                 <p className="email-user">{user.email}</p>
             </div>
