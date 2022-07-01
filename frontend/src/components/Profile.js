@@ -10,6 +10,7 @@ export const Profile = () => {
                 <p className="nombre-user">{user.name}</p>
                 <p className="email-user">{user.email}</p>
             </div>
-        )
+        ),
+      console.log(user)
     )
 }

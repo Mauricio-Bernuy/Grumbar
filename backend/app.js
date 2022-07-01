@@ -6,7 +6,8 @@ const cors = require('cors');
 var indexRouter = require('./routes/index');
 var testAPIRouter = require('./routes/testAPI');
 var testDBRouter = require('./routes/testDB');
-var imageRouter = require('./routes/imageRoutes');
+var assetRouter = require('./routes/assetRoutes');
+var userRouter = require('./routes/userRoutes');
 
 var config = require('./config');
 
@@ -20,8 +21,9 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 //app.use('/testAPI', testAPIRouter);
-app.use('/testDB', testDBRouter);
-app.use('/api/images', imageRouter);
+app.use('/api/testDB', testDBRouter);
+app.use('/api/assets', assetRouter);
+app.use('/api/users', userRouter);
 
 app.use(express.static('public'));
 app.use('/api/assets', express.static('./uploads')); // this the one
