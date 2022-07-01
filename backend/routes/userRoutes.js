@@ -26,9 +26,11 @@ router.post('/register', (req, res, next) => {
   userModel.create(obj, (err, item) => {
     if (err) {
       console.log(err);
+      res.json({ message: 'Upload Failed' });
     } else {
       // item.save();
-      res.json({ message: 'lo que sea' });
+      res.json({ message: 'Upload Success' });
+      console.log('Asset upload success');
     }
   });
 });

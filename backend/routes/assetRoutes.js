@@ -186,7 +186,7 @@ router.get('/find/:mongoId', async (req, res) => {
 });
 
 //find all assets from an especific user
-router.get('user/:mongoId', async (req, res) => {
+router.get('/user/:mongoId', async (req, res) => {
   var id = req.param('mongoId');
   const userAssets = await userAssetModel.find({ userId: id });
   return res.json(userAsset);
