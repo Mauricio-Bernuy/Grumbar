@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var assetSchema = new mongoose.schema({
+var assetSchema = mongoose.Schema({
   url: String,
   title: String,
   category: String,

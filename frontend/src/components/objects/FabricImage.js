@@ -2,6 +2,10 @@ import React, { useContext, useState } from 'react';
 import { fabric } from 'fabric';
 import { FabricContext } from '../../context/FabricContext';
 
+import { useAuth0 } from '@auth0/auth0-react';
+
+
+
 const supportedImageTypes = [
   'image/png',
   'image/apng',
@@ -12,6 +16,8 @@ const supportedImageTypes = [
 ];
 
 const FabricImage = () => {
+const { user, isAuthenticated } = useAuth0();
+
   const [selectedFile, setSelectedFile] = useState();
 
   const changeHandler = event => {
@@ -22,6 +28,8 @@ const FabricImage = () => {
   const { canvas } = useContext(FabricContext);
 
   const onImageUpload = e => {
+    console.log(user)
+    console.log("XD?")
     const formData = new FormData();
     formData.append('asset', selectedFile);
     formData.append('userId', "userexampol");
@@ -37,6 +45,7 @@ const FabricImage = () => {
         console.log(result);
       })
       .catch(error => {
+        // console.log(error)
         console.error(error);
       });
   };

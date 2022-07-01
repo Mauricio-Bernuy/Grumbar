@@ -1,0 +1,6 @@
+{
+    "superBG.disable": false,
+    "superBG.opacity": 2,
+    "superBG.images": [],
+    "superBG.url": "localhost:3000"
+}

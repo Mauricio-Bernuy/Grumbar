@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var path = require('path');
+const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var testAPIRouter = require('./routes/testAPI');
@@ -10,6 +11,7 @@ var imageRouter = require('./routes/imageRoutes');
 var config = require('./config');
 
 var app = express();
+app.use(cors());
 
 app.set('port', process.env.PORT || 9000);
 
@@ -22,7 +24,7 @@ app.use('/testDB', testDBRouter);
 app.use('/api/images', imageRouter);
 
 app.use(express.static('public'));
-app.use('/api/assets', express.static('./uploads'));
+app.use('/api/assets', express.static('./uploads')); // this the one
 
 app.use(express.static(path.join(__dirname, 'public')));
 

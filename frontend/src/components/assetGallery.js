@@ -15,9 +15,12 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { fabric } from 'fabric';
 import { FabricContext } from '../context/FabricContext';
 
+let fetchData = []
+
 export default function TitlebarImageList(props) {
   const [open, setOpen] = React.useState(false);
   const handleClick = () => {
+    console.log(fetchData)
     setOpen(!open);
   };
 
@@ -27,10 +30,17 @@ export default function TitlebarImageList(props) {
     FabricContext
   );
 
+
+  useEffect(() => {
+    fetch('http://localhost:9000/api/images')
+     .then((response) => response.json())
+     .then(json => fetchData = json)
+   }, []);
+
   let lock = false;
   const addAsset = e => {
     canvas.on('mouse:up', function(opt) {
-      const file = e.img;
+      const file = e.url;
       fabric.Image.fromURL(file, function(img) {
         img.scaleToWidth(100);
         img.snapAngle = 15;
@@ -50,6 +60,7 @@ export default function TitlebarImageList(props) {
   };
 
   const clickOnce = e => {
+    console.log(e)
     if (lock === false) {
       addAsset(e);
       lock = true;
@@ -68,17 +79,17 @@ export default function TitlebarImageList(props) {
 
       <Collapse in={open}>
         <ImageList>
-          {assetData.map(item => (
-            <ImageListItem key={item.img}>
+          {fetchData.map(item => (
+            <ImageListItem key={item.url}>
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.url}?w=248&fit=crop&auto=format`}
+                srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
                 alt={item.title}
                 loading='lazy'
               />
               <ImageListItemBar
                 title={item.title}
-                subtitle={item.Category}
+                subtitle={item.category}
                 actionIcon={
                   <IconButton
                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
@@ -100,6 +111,8 @@ export default function TitlebarImageList(props) {
     </>
   );
 }
+
+
 
 const assetData = [
   {
