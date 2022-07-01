@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
-import { fabric } from "fabric";
-import { FabricContext } from "../../context/FabricContext";
+import React, { useContext, useState } from 'react';
+import { fabric } from 'fabric';
+import { FabricContext } from '../../context/FabricContext';
 
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -19,12 +19,12 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import PublishIcon from "@mui/icons-material/Publish";
 const supportedImageTypes = [
-  "image/png",
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/x-icon",
-  "image/jpeg",
+  'image/png',
+  'image/apng',
+  'image/bmp',
+  'image/gif',
+  'image/x-icon',
+  'image/jpeg'
 ];
 
 const FabricImage = (props) => {
@@ -41,7 +41,7 @@ const FabricImage = (props) => {
     setOpen(false);
   };
 
-  const changeHandler = (event) => {
+  const changeHandler = event => {
     console.log(event.target.files);
     setSelectedFile(event.target.files[0]);
   };
@@ -76,7 +76,7 @@ const FabricImage = (props) => {
       formData.append("title", e.target.title.value);
       formData.append("category", e.target.category.value);
 
-      fetch("http://localhost:9000/api/assets/devupload", {
+      fetch("http://localhost:9000/api/assets/dev/upload", {
         method: "POST",
         body: formData,
       })
@@ -96,15 +96,15 @@ const FabricImage = (props) => {
   const theme = useTheme();
 
   const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} placement="right-end" />
+    <Tooltip {...props} classes={{ popper: className }} placement='right-end' />
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#f5f5f9",
-      color: "rgba(0, 0, 0, 0.87)",
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
       maxWidth: 220,
       fontSize: theme.typography.pxToRem(12),
-      border: "1px solid #dadde9",
-    },
+      border: '1px solid #dadde9'
+    }
   }));
 
   return (
@@ -113,14 +113,14 @@ const FabricImage = (props) => {
         <HtmlTooltip
           title={
             <React.Fragment>
-              <Typography color="inherit">Upload Assets</Typography>
-              <em>{"Upload your own assets to use inside the editor"}</em>
+              <Typography color='inherit'>Upload Assets</Typography>
+              <em>{'Upload your own assets to use inside the editor'}</em>
             </React.Fragment>
           }
         >
           <IconButton
-            size="small"
-            aria-label="add asset"
+            size='small'
+            aria-label='add asset'
             onClick={handleClickOpen}
           >
             <PublishIcon />
@@ -143,9 +143,9 @@ const FabricImage = (props) => {
                 />
                 <TextField
                   required
-                  id="outlined-required"
-                  label="Category"
-                  name="category"
+                  id='outlined-required'
+                  label='Category'
+                  name='category'
                 />
                 {props.userInput ? (
                   <>
@@ -162,26 +162,26 @@ const FabricImage = (props) => {
                 )}
 
                 <Button
-                  variant="contained"
-                  component="label"
-                  color={!selectedFile ? "primary" : "success"}
+                  variant='contained'
+                  component='label'
+                  color={!selectedFile ? 'primary' : 'success'}
                 >
-                  {!selectedFile ? "Upload File" : "File Selected!"}
+                  {!selectedFile ? 'Upload File' : 'File Selected!'}
 
                   <input
-                    type="file"
-                    name="asset"
-                    id="fabric-image-upload"
-                    accept="image/*"
+                    type='file'
+                    name='asset'
+                    id='fabric-image-upload'
+                    accept='image/*'
                     onChange={changeHandler}
-                    style={{ display: "none" }}
+                    style={{ display: 'none' }}
                   />
                 </Button>
               </Stack>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit">Add asset</Button>
+              <Button type='submit'>Add asset</Button>
             </DialogActions>
           </Dialog>
         </form>

@@ -6,15 +6,20 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 var path = require('path');
+const assetFolder = "files/assets";
 
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const path = 'uploads'
-    fs.mkdirSync(path, { recursive: true })
+    const path = assetFolder;
+    // fs.mkdirSync("files/", { recursive: true });
+    fs.mkdirSync(path, { recursive: true });
     cb(null, path);
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
@@ -43,7 +48,7 @@ router.post('/upload', upload.single('asset'), (req, res, next) => {
 });
 
 // Developer uploading
-router.post('/devupload', upload.single('asset'), (req, res, next) => {
+router.post('/dev/upload', upload.single('asset'), (req, res, next) => {
   var obj = {
     url: req.file.filename,
     title: req.body.title,
@@ -71,6 +76,15 @@ router.get('/', async (req, res) => {
   for (var i = 0; i < images.length; i++) {
     images[i].url = req.protocol + '://' + req.get('host') + '/api/assets/' + images[i].url;
   }
+
+  // const images2 = await userAssetModel.find(
+  //   {},
+  //   { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
+  // );
+  // for (var i = 0; i < images2.length; i++) {
+  //   images2[i].url = req.protocol + '://' + req.get('host') + '/api/assets/' + images[i].url;
+  // }
+  // images = await images.concat(images2);
   return res.json(images);
 });
 
@@ -97,7 +111,7 @@ router.post('/personal', upload.single(''), async (req, res, next) => {
 
   console.log(userId)
   const images = await userAssetModel.find(
-    {userId: userId},
+    { userId: userId },
     { url: 1, title: 1, category: 1, userId: 1, _id: 1 }
   );
   
@@ -129,7 +143,7 @@ router.get('/common/clear', async (req, res) => {
     { url: 1}
   );
   for (var i = 0; i < images.length; i++) {
-    const path = './uploads/' + images[i].url;
+    const path = './' + assetFolder  + images[i].url;
     console.log(path)
     if (fs.existsSync(path)) 
       fs.unlinkSync(path, { recursive: true })
@@ -147,7 +161,7 @@ router.get('/personal/clear', async (req, res) => {
     { url: 1}
   );
   for (var i = 0; i < images.length; i++) {
-    const path = './uploads/' + images[i].url;
+    const path = './' + assetFolder  + images[i].url;
     console.log(path)
     if (fs.existsSync(path)) 
       fs.unlinkSync(path, { recursive: true })
@@ -164,8 +178,20 @@ router.get('/api/images/:id', async (req, res) => {
   return res.json(image);
 });
 
-router.delete('/api/images/:id', async (req, res) => {
-
+//find asset with id
+router.get('/find/:mongoId', async (req, res) => {
+  var id = req.param('mongoId');
+  const asset = await assetModel.find({ _id: id });
+  return res.json(asset);
 });
+
+//find all assets from an especific user
+router.get('user/:mongoId', async (req, res) => {
+  var id = req.param('mongoId');
+  const userAssets = await userAssetModel.find({ userId: id });
+  return res.json(userAsset);
+});
+
+//router.delete('/:id', async (req, res) => {});
 
 module.exports = router;

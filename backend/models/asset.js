@@ -12,4 +12,4 @@ var assetSchema = mongoose.Schema({
 
 //image is a model which has a schema imageschema
 
-module.exports = new mongoose.model('asset', assetSchema);
+module.exports = new mongoose.model('assets', assetSchema);
