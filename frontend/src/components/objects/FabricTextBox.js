@@ -36,6 +36,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
 import TextField from "@mui/material/TextField";
+import { Checkbox, FormControl, InputLabel, Select, Stack } from "@mui/material";
 
 const FabricTextBox = () => {
   const {
@@ -108,7 +109,6 @@ const FabricTextBox = () => {
     });
     lyrs.shift();
     let layerlevel = Math.max.apply(null, lyrs);
-    // console.log(lyrs,layerlevel)
 
     linelayer = Math.max(linelayer, layerlevel, layerLevel);
 
@@ -117,7 +117,7 @@ const FabricTextBox = () => {
 
   let lock = false;
   const addTextBox = (e) => {
-    canvas.on("mouse:up", function(opt) {
+    canvas.on("mouse:up", function (opt) {
       let textBox = new fabric.Textbox("Add your text here", {
         width: 200,
         top: 10,
@@ -175,21 +175,21 @@ const FabricTextBox = () => {
   };
 
   const updateFill = (e) => {
-    setTextOptions({
-      ...textOptions,
-      fill: e.target.value,
-    });
-    setActiveProp("fill", e.target.value, activeObject);
+      setTextOptions({
+        ...textOptions,
+        fill: e.target.value,
+      });
+      setActiveProp("fill", e.target.value, activeObject);
   };
 
   const updateTextAlign = (e) => {
     setTextOptions({
       ...textOptions,
-      textAlign: e.currentTarget.value,
+      textAlign: e.target.value,
     });
     setActiveStyle(
       "textAlign",
-      e.currentTarget.value.toLowerCase(),
+      e.target.value.toLowerCase(),
       activeObject
     );
   };
@@ -283,7 +283,13 @@ const FabricTextBox = () => {
             anchorEl={anchorEl}
             open={true}
           >
-            <Paper sx={{ width: 180, maxWidth: "100%", backgroundColor: 'rgba(255,255,255,0.85)',  }}>
+            <Paper
+              sx={{
+                width: 180,
+                maxWidth: "100%",
+                backgroundColor: "rgba(255,255,255,0.85)",
+              }}
+            >
               <MenuList>
                 <MenuItem
                   style={{
@@ -298,83 +304,99 @@ const FabricTextBox = () => {
                     </Typography>
                   </ListItemText>
                 </MenuItem>
-
-                <TextField
-                  type="number"
-                  name="totalBill"
-                  label="Font Size"
-                  variant="filled"
-                  value={textOptions.fontSize}
-                  onChange={updateFontSize}
-                />
-                <TextField
-                  type="color"
-                  name="totalBill"
-                  label="Color"
-                  variant="filled"
-                  value={textOptions.fill}
-                  onChange={updateFill}
-                />
-                <select
-                  name="textAlign"
-                  className="btn-object-action"
-                  onChange={updateTextAlign}
-                  value={textOptions.textAlign}
+                <Stack
+                  direction="column"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={0.5}
                 >
-                  <option value="left">Left</option>
-                  <option value="center">Center</option>
-                  <option value="right">Right</option>
-                </select>
+                  <TextField
+                    type="number"
+                    name="totalBill"
+                    label="Font Size"
+                    variant="filled"
+                    value={textOptions.fontSize}
+                    onChange={updateFontSize}
+                  />
+                  <TextField
+                    id="full-width-text-field"
+                    style={{ width: "100%" }}
+                    size="small"
+                    type="color"
+                    name="totalBill"
+                    label="Color"
+                    variant="filled"
+                    value={textOptions.fill}
+                    onChange={updateFill}
+                  />
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Align Text</InputLabel>
+                    <Select
+                      labelId="textAlign"
+                      style={{ width: "100%" }}
+                      id="demo-simple-select"
+                      value={textOptions.textAlign}
+                      label="Align Text"
+                      onChange={updateTextAlign}
+                    >
+                      <MenuItem value={"left"}>Left</MenuItem>
+                      <MenuItem value={"center"}>Center</MenuItem>
+                      <MenuItem value={"right"}>Right</MenuItem>
+                    </Select>
+                  </FormControl>
 
-                <div id="text-controls-additional">
-                  <button
-                    type="button"
-                    style={{
-                      background:
-                        textOptions.fontWeight === "bold" ? "white" : "gray",
-                    }}
-                    onMouseUp={updateBold}
-                    className="btn btn-object-action"
-                  >
-                    <strong>B</strong>
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      background:
-                        textOptions.fontStyle === "italic" ? "white" : "gray",
-                    }}
-                    onMouseUp={updateItalic}
-                    className="btn btn-object-action"
-                    id="text-cmd-italic"
-                  >
-                    <em>I</em>
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      background:
-                        textOptions.textDecoration === "underline"
-                          ? "white"
-                          : "gray",
-                    }}
-                    onMouseUp={updateUnderline}
-                    className="btn btn-object-action"
-                    id="text-cmd-underline"
-                  >
-                    <u>U</u>
-                  </button>
-                </div>
+                  <div id="text-controls-additional">
+                    <button
+                      type="button"
+                      style={{
+                        background:
+                          textOptions.fontWeight === "bold" ? "white" : "gray",
+                      }}
+                      onMouseUp={updateBold}
+                      className="btn btn-object-action"
+                    >
+                      <strong>B</strong>
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        background:
+                          textOptions.fontStyle === "italic" ? "white" : "gray",
+                      }}
+                      onMouseUp={updateItalic}
+                      className="btn btn-object-action"
+                      id="text-cmd-italic"
+                    >
+                      <em>I</em>
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        background:
+                          textOptions.textDecoration === "underline"
+                            ? "white"
+                            : "gray",
+                      }}
+                      onMouseUp={updateUnderline}
+                      className="btn btn-object-action"
+                      id="text-cmd-underline"
+                    >
+                      <u>U</u>
+                    </button>
+                  </div>
 
-                <label htmlFor="ToggleShadow">Toggle Shadow:</label>
-                <input
-                  type="checkbox"
-                  style={{ width: "40px" }}
-                  className="toggle-switch-checkbox"
-                  name="strokeWidth"
-                  defaultChecked={hasShadow}
-                  onChange={toggleShadow}
-                />
+                  {/* <label htmlFor="ToggleShadow">Toggle Shadow:</label>
+                  <input
+                    type="checkbox"
+                    style={{ width: "40px" }}
+                    className="toggle-switch-checkbox"
+                    name="strokeWidth"
+                    
+                  /> */}
+                  <FormControlLabel control={<Checkbox defaultChecked={hasShadow}
+                    onChange={toggleShadow}/>} label="Toggle Shadow" />
+                </Stack>
+
                 <hr />
 
                 <MenuItem
