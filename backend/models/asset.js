@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var assetSchema = new mongoose.schema({
+var assetSchema = mongoose.Schema({
   url: String,
   title: String,
   category: String,
@@ -12,4 +12,4 @@ var assetSchema = new mongoose.schema({
 
 //image is a model which has a schema imageschema
 
-module.exports = new mongoose.model('image', assetSchema);
+module.exports = new mongoose.model('asset', assetSchema);
