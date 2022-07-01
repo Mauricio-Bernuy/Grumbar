@@ -2,7 +2,6 @@ import { MapCardItem } from "./MapCard"
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import MapPreview from "../maidenless.jpg"
-import {useAuth0} from '@auth0/auth0-react'
 import { useState } from "react";
 
 
@@ -63,7 +62,6 @@ const MapCards = [
 
 export function MapCardGrid() {
 
-    const {user} = useAuth0()
     const [maps, setMaps] = useState(MapCards)
 
 
@@ -79,10 +77,10 @@ export function MapCardGrid() {
                 overflowY: "scroll",
                 }}>
                 <Grid container spacing={10}>
-                    {MapCards.map((MapCard, i) => {
+                    {MapCards.map((maps, i) => {
                         return (
                             <Grid key={i} item>
-                                <MapCardItem key={i} {...MapCard}/>
+                                <MapCardItem key={i} {...maps}/>
                             </Grid>)
                     })}
                 </Grid>
