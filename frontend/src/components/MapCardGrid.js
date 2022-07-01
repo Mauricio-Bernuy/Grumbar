@@ -1,7 +1,7 @@
 import { MapCardItem } from "./MapCard"
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import MapPreview from "../maidenless.jpg"
+import MapPreview from "../assets/MountainsBG.webp"
 import { useState } from "react";
 
 
