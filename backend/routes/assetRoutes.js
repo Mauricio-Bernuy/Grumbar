@@ -6,12 +6,11 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 var path = require('path');
-const assetFolder = "files/assets";
+const assetFolder = "files/assets/";
 
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const path = assetFolder;
-    // fs.mkdirSync("files/", { recursive: true });
     fs.mkdirSync(path, { recursive: true });
     cb(null, path);
   },
@@ -24,6 +23,8 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage });
+
+// MIGHT BE BETTER TO ENCODE INSIDE THE URL ITSELF, THINK OF A WAY TO LET SOMEONE ACESS THE FILE, BUT NOT CONSTANTLY HAVE IT AS EASILY AS JUST THE FILENAME
 
 // * UPLOAD ASSETS
 // User uploading

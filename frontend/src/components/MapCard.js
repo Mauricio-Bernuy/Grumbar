@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 
 
-export const MapCardItem = ({image, description, name}) => {
+export const MapCardItem = ({image, description, name, setEditing}) => {
 
     return (
         <Card sx={{
@@ -29,7 +29,7 @@ export const MapCardItem = ({image, description, name}) => {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={setEditing(false)}>
                     Open in editor
                 </Button>
                 <Button size="small" color="primary">

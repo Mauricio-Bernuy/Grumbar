@@ -8,63 +8,60 @@ import { useState } from "react";
 const MapCards = [
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 1"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 2"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 3"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 4"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 5"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 6"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 7"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 8"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 9"
     },
     {
         image: MapPreview,
-        description: "Descripcion del mapa. Hola jaja este es mi mapa de la caverna del dungeon mas pogerinos de la historia de los dungeons de los dungeon pogerinis",
-        name: "Nombre del mapa"
+        description: "Map description.",
+        name: "Map name 10"
     },
-    
-
 ]
 
-export function MapCardGrid() {
 
+export function MapCardGrid(props) {
     const [maps, setMaps] = useState(MapCards)
-
-
+    
     return (
         <> 
             <Box p={5} sx={{
@@ -78,9 +75,11 @@ export function MapCardGrid() {
                 }}>
                 <Grid container spacing={10}>
                     {MapCards.map((maps, i) => {
+                        let a = {setEditing: props.setEditing};
+                        let aa = {...maps,...a};
                         return (
                             <Grid key={i} item>
-                                <MapCardItem key={i} {...maps}/>
+                                <MapCardItem key={i} {...aa}/>
                             </Grid>)
                     })}
                 </Grid>

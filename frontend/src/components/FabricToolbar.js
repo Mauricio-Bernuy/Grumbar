@@ -187,7 +187,7 @@ const FabricToolbar = (props) => {
 
           <Divider />
 
-          <FabricExportLoad />
+          <FabricExportLoad setEditing={props.setEditing}/>
 
           {/* <FabricImage /> */}
         </List>

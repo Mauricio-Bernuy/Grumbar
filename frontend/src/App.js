@@ -15,57 +15,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Fade } from '@mui/material';
 import { TransitionGroup } from 'react-transition-group';
-
-// class App extends Component {
-//   constructor(props) {
-// 	super(props);
-// 	this.state = { apiResponse: "" };
-//   }
-
-//   callAPI() {
-// 	fetch("http://localhost:9000/testAPI")
-// 	  .then(res => res.text())
-// 	  .then(res => this.setState({ apiResponse: res }));
-//   }
-//   callDB() {
-// 	fetch("http://localhost:9000/testDB")
-// 	  .then(res => res.text())
-// 	  .then(res => this.setState({ dbResponse: res }))
-// 	  .catch(err => err);
-//   }
-
-//   componentDidMount() {
-// 	this.callAPI();
-// 	this.callDB();
-//   }
-
-//   render() {
-// 	return (
-// 	  <div style={{"padding": "0px 0px", 'height':'100vh' }}>
-// 		<p>{this.state.apiResponse}</p>
-// 		<p>{this.state.dbResponse}</p>
-// 		<FabricContextProvider>
-// 		  <div style={{ "display": "flex", "alignItems": "stretch" }}>
-// 			<div style={{ "width": "100px", "background": "gray", "padding": "20px 20px 0 20px" }}>
-// 			  <FabricToolbar/>
-// 			  <FpsView width={100} height={20} top={window.innerHeight-50} left={0}/>
-// 			</div>
-// 			<div style={{ "flex": "1" }}>
-// 			  <FabricCanvas/>
-// 			</div>
-// 		  </div>
-// 		</FabricContextProvider>
-// 	  </div>
-// 	  );
-//   }
-// }
 
 function App() {
 
@@ -80,13 +35,11 @@ function App() {
   const openEditor = () => {
     let edit = true
     setEditing(edit)
-    console.log("XD")
   }
 
   return (
     <>
       <div style={{ padding: '0px 0px', height: '100vh' }}>
-        {/* <LoginButton />*/}
         {isAuthenticated ? (
           <>
             <NavBar>
@@ -98,14 +51,14 @@ function App() {
               <FabricContextProvider>
                 <div style={{ display: "flex", alignItems: "stretch" }}>
                   <div>
-                    <FabricToolbar />
+                    <FabricToolbar setEditing={setEditing}/>
 
-                    <FpsView
+                    {/* <FpsView
                       width={100}
                       height={20}
                       top={window.innerHeight - 50}
                       left={0}
-                    />
+                    /> */}
                   </div>
                   <Fade
                     in={true}
@@ -127,7 +80,7 @@ function App() {
                 <Box ml={15} mt={2} mb={2}>
                     <Button size="large" variant="outlined" onClick={() => openEditor()}>Create New Map</Button>
                 </Box>
-                <MapCardGrid></MapCardGrid>
+                <MapCardGrid setEditing={setEditing}/>
               </>
             )}
           </>

@@ -5,6 +5,7 @@ import React, {
   useRef,
   useCallback,
   useState,
+  
 } from "react";
 import { FabricContext } from "../context/FabricContext";
 import { fabric } from "fabric";
@@ -58,9 +59,7 @@ const FabricCanvas = ({ jsonData = null }) => {
 
 
     canvas.on("mouse:down", function(opt) {
-      //   console.log("selectable=", canvas.selection);
       var evt = opt.e;
-      //   if (evt.button === 1 || evt.ctrlKey === true) {
       if (evt.ctrlKey === true) {
         console.log("pressed click + control");
         var target = canvas.findTarget(opt.e);

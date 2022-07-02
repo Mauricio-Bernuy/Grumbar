@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
 
-const FabricExportLoad = () => {
+const FabricExportLoad = (props) => {
   const {
     canvas,
     dimensions,
@@ -85,26 +85,6 @@ const FabricExportLoad = () => {
 
             canvas.forEachObject(function(obj) {
               console.log(obj.type);
-
-              // if (obj.type === 'polyline'){
-              // 	console.log("found poly")
-              // 	obj.set({
-              // 		// ...options,
-              // 		selectable: false,
-              // 		hasControls: false,
-              // 		lockMovementX: true,
-              // 		lockMovementY: true,
-              // 		lockSkewingX: true,
-              // 		lockSkewingY: true,
-
-              // 		cornerStyle: 'circle',
-              // 		stroke: "black",
-              // 		dirty: false,
-              // 		strokeWidth:10,
-              // 		hoverCursor: 'cell',
-              // 		objectCaching: false // greatly increases render resolution
-              // 	});
-              // }
             });
 
             canvas.on("object:scaling", function(e) {
@@ -190,7 +170,7 @@ const FabricExportLoad = () => {
   };
 
   const SaveMap = (e) => {
-    
+    props.setEditing(false);
   };
 
   return (
