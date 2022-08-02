@@ -1,5 +1,8 @@
 ![image](https://user-images.githubusercontent.com/54604331/182275042-5630db4b-5047-40f1-8b95-fedb7e09de15.png)
-Editor de mapas para el juego de rol Dungeons & Dragons, con funcionalidades de carga de archivos, exporte y renderizado de mapas. Implementada en React, ExpressJS y MongoDB.
+
+<h2 align="center">
+    Editor de mapas para el juego de rol Dungeons & Dragons, con funcionalidades de carga de archivos, exporte y renderizado de mapas. Implementada en React, ExpressJS y MongoDB.
+</h2>
 
 # Main Features
 
