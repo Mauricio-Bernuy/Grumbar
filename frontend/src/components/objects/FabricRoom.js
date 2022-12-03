@@ -77,14 +77,6 @@ const FabricRoom = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeObject]);
 
-  const updateStrokeWidth = (e) => {
-    setOptions({
-      ...options,
-      strokeWidth: e.target.value,
-    });
-    setActiveStyle("strokeWidth", parseInt(e.target.value, 10), activeObject);
-  };
-
   const bringFw = (e) => {
     setOptions({
       ...options,
@@ -100,14 +92,7 @@ const FabricRoom = () => {
     });
     lyrs.shift();
     let layerlevel = Math.min.apply(null, lyrs);
-
-    // let layerlevel = objects.indexOf(prevGrid[prevGrid.length]);
-    // console.log(lyrs,Math.min.apply(null, lyrs))
-
     linelayer = Math.max(linelayer, layerlevel, layerLevel);
-
-    // console.log(l, linelayer)
-
     if (l < linelayer - 1) activeObject.bringForward();
   };
 
@@ -284,8 +269,6 @@ const FabricRoom = () => {
               canvas.remove(templines[i]);
             }
 
-            // console.log("listen: ", listener);
-            // console.log("curr: ", curr);
             canvas.off("mouse:up", curr);
 
             lock1 = false;
